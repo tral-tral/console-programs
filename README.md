@@ -25,6 +25,10 @@ A fun virus that tries to hide and prevent itself from being deleted.
 It will at random times print a fake error and shutdown the computer.
 Send to victim as a program named hello.update
 
+## srgexe 
+A program that can recreate itself from its own code.
+If you delete it while it's running, it will rebuild itself.
+
 
 
 
