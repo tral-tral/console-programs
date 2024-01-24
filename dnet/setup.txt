@@ -1,0 +1,48 @@
+
+Setup directories-
+
+makedir /users;make /logging;makedir /logins;makedir /relays;makedir /connect;makedir /processing;makedir /chatting;makedir /chatroam;makedir /chatters
+
+/users      Account storing, mails and such
+/logins     Account passwords
+/relays     Accounts connected
+/connect    Sources connected       mplace, bplace, cplace, itarget, process, login, mailto, mailsub
+/processing Account processes
+/chatting   Chatrooms     Like /Public   /Help   would contain source ip for accounts
+/chatters   place list
+/chatroam   Switch chatroom procresses
+
+
+connect,chatroam,processing are all process directories and must be cleared out if server shutdowns during an operation or crash.
+
+
+Make Account- use this to add new accounts arg1 should be the username.  arg2 should be username.password
+makedir /users/arg1;make /users/arg1/mails;file_add /users/arg1/mails <br>;makedir /users/arg1/mail;make /users/arg1/new;file_add /users/arg1/new 0;make /logins/arg2;file_add /logins/arg2 arg1
+
+
+Clear temp files - run this script to clear all the process directories if something locks up
+cd /connect;del *;cd /relays;del *;cd /processing;del *;cd /chatting;del *;cd /chatters;del *;cd /chatroam;del *;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

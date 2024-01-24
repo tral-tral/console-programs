@@ -1,0 +1,41 @@
+/usr/dnetClient
+	Intented to have better input system with more files, but this works fine for now.
+	dncr - externs out commands recieved from the .com's
+                           extern 0 [server ip] -2 args
+	
+disconnect - Disconnect and logout
+lM - Show mail list
+lB - Show boards list
+lC - Show chatters
+@  -  All compose mail data
+^  - Read mail data
+#  - Switch forum board data
+.  - Post forums data
+*  - Delete mail
+!  - Switch instant message target
+$  - Send instant message to target
+%  - Choose chatroom
+&  - Talk in chatroom
+
+
+d@ - Mail
+dnet - connect
+ddrop - disconnect
+dlm - show mail
+dlb - show boards
+drm - read mail
+dsb - switch board
+ddem - delete mail
+dmt - instant message target
+dm - instant message
+dct - chatroom target
+dcl - chatroom chatter list 
+dc  - chatroom message
+
+
+
+
+
+client install script- Install client files. run ssa with username.password to set login. run sip [server address] to point commands to the server.
+
+makedir /usr/dnetClient;make /usr/dnetClient/dncr;make /usr/dnetClient/ssa;make /usr/dnetClient/usid;make /usr/packet-2.scr;makedir /usr/sid;make /usr/dnetClient/sip;file_add /usr/dnetClient/sip rename;file_add /usr/dnetClient/ssa dumpfile[semi]"/usr/dnetClient/sip[semi]pip[newline]set[semi]a[semi]"rename /usr/sid/[newline]eval[semi]a[semi]+=[semi]pip[newline]eval[semi]a[semi]+=[semi]" [newline]eval[semi]a[semi]+=[semi]arg:"1[newline]shell[semi]a[newline]shell[semi]"file_clear /usr/dnetClient/sip[newline]set[semi]a[semi]"file_add /usr/dnetClient/sip [newline]eval[semi]a[semi]+=[semi]arg:"1[newline]shell[semi]a[newline]shell[semi]"file_clear /usr/dnetClient/dncr[newline]set[semi]a[semi]"file_add /usr/dnetClient/dncr extern 0 [newline]eval[semi]a[semi]+=[semi]arg:"1[newline]eval[semi]a[semi]+=[semi]" -2 args[newline]shell[semi]a;run /bin/compiler.exe /usr/dnetClient/ssa;file_add /usr/dnetClient/dncr extern 0 rename -2 args;file_add /usr/packet-2.scr set[semi]e[semi]"back /usr/sid/[newline]eval[semi]e[semi]+=[semi]arg:"1[newline]eval[semi]e[semi]+=[semi]" [newline]eval[semi]e[semi]+=[semi]arg:"4[newline]shell[semi]e;run /bin/compiler.exe /usr/packet-2.scr;make /usr/sid/rename;file_add /usr/sid/rename echo <dNET»> args;make /sys/registry/dnet.com;file_add /sys/registry/dnet.com dumpfile[semi]"/usr/dnetClient/usid[semi]user[newline]replacetext[semi]connect[semi]"back /usr/dnetClient/dncr @[semi]"@[semi]user[newline]shell[semi]connect;run /bin/compiler.exe /sys/registry/dnet.com;make /sys/registry/dhelp.com;file_add /sys/registry/dhelp.com echo d@ - Mail<br>dnet - connect<br>ddrop - disconnect<br>dlm - show mail<br>drm - read mail<br>ddem - delete mail<br>dmt - instant message target<br>dm - instant message<br>dct - chatroom target<br>dcl - chatroom chatter list<br>dc - chatroom message;make /sys/registry/d@.com;make /sys/registry/ddrop.com;make /sys/registry/dlm.com;make /sys/registry/drm.com;make /sys/registry/ddem.com;make /sys/registry/dmt.com;make /sys/registry/dm.com;make /sys/registry/dct.com;make /sys/registry/dc.com;make /sys/registry/dcl.com;file_add /sys/registry/d@.com back /usr/dnetClient/dncr @args;file_add /sys/registry/ddrop.com back /usr/dnetClient/dncr disconnect;file_add /sys/registry/dlm.com back /usr/dnetClient/dncr lM;file_add /sys/registry/drm.com back /usr/dnetClient/dncr ^args;file_add /sys/registry/ddem.com back /usr/dnetClient/dncr *args;file_add /sys/registry/dmt.com back /usr/dnetClient/dncr !args;file_add /sys/registry/dm.com back /usr/dnetClient/dncr $args;file_add /sys/registry/dct.com back /usr/dnetClient/dncr %args;file_add /sys/registry/dc.com back /usr/dnetClient/dncr &args;file_add /sys/registry/dcl.com back /usr/dnetClient/dncr lC

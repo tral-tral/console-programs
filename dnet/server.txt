@@ -1,0 +1,626 @@
+id;inplOk
+char;nsemi;"59
+char;spc;"10
+replacetext;con;"/connect/@;"@;arg:"1
+getfile;tmp;con
+if;tmp;!=;null;input
+replacetext;tmp;"/logins/@;"@;arg:"4
+getfile;cd;tmp
+if;cd;!=;null;cdokay
+set;tmp;"Not connected. Login not found.
+goto;cending
+id;cdokay
+dumpfile;tmp;login
+replacetext;cd;"/relays/@;"@;login
+getfile;cd2;cd
+if;cd2;==;null;cdrelayok
+dumpfile;cd;recon0
+set;ReconCon;arg:"1
+set;ReconLogin;arg:"4
+set;arg:"1;recon0
+set;Recon;"1
+set;arg:"4;"disconnect
+replacetext;con;"/connect/@;"@;arg:"1
+goto;input
+id;cdrelayok
+replacetext;tmp;"makedir /connect/#|make /connect/#/process;"|;nsemi
+replacetext;tmp;tmp;"#;arg:"1
+shell;tmp
+replacetext;processing;"@/process;"@;con
+getfile;processcheck;processing
+eval;processcheck;+=;".
+dumpfile;processing;processapply
+if;processapply;==;".;CoNprocessok
+dumpfile;processing;CoNprocessapply
+replacetext;processcheck;processapply;"*;"
+if;processcheck;!=;processapply;CoNprocessapply
+id;CoNprocesseres
+set;tmp;"Login conflict. Retry connection.
+replacetext;freeze;"del @;"@;con
+shell;freeze
+goto;cending
+id;CoNprocessapply
+end;processfail
+id;CoNprocessok
+eval;processcheck;+=;"*
+dumpfile;processing;processapply
+replacetext;moo;processapply;"**;"
+if;moo;!=;processapply;CoNprocesseres
+replacetext;tmp;"make /connect/#/mplace|make /connect/#/bplace|make /connect/#/cplace|make /connect/#/itarget|make /connect/#/mailto|make /connect/#/mailsub|make /connect/#/login|file_add /connect/#/login @|make /relays/@|file_add /relays/@ #;"#;arg:"1
+replacetext;tmp;tmp;"|;nsemi
+replacetext;tmp;tmp;"@;login
+shell;tmp
+replacetext;unread;"/users/@/new;"@;login
+dumpfile;unread;unread
+replacetext;tmp;"Connected to dNET as @. You have # new messages.;"#;unread
+replacetext;tmp;tmp;"@;login
+goto;ending
+id;input
+replacetext;login;"@/login;"@;con
+dumpfile;login;login
+if;arg:"4;!=;"unlock;unlocked
+replacetext;lock;"@/process;"@;con
+getfile;locked;lock
+if;locked;==;null;unlocking
+end;notlocked
+id;unlocking
+set;open;"make 
+eval;open;+=;lock
+shell;open
+end;opened
+id;unlocked
+set;processing;con
+eval;processing;+=;"/process
+getfile;processcheck;processing
+eval;processcheck;+=;".
+dumpfile;processing;processapply
+if;processapply;==;".;processok
+dumpfile;processing;processapply
+replacetext;processcheck;processapply;"*;"
+if;processcheck;!=;processapply;processapply
+id;processeres
+set;tmp;"Command conflict. Connection has been frozen. Send command 'unlock' to regain access.
+replacetext;freeze;"del @/process;"@;con
+shell;freeze
+goto;cending
+id;processapply
+end;processfail
+id;processok
+eval;processcheck;+=;"*
+dumpfile;processing;processapply
+replacetext;moo;processapply;"**;"
+if;moo;!=;processapply;processeres
+shell;"timestamp   
+set;timestamp;err_level
+if;arg:"4;==;"disconnect;disconnect
+if;arg:"4;==;"lM;showmail
+if;arg:"4;==;"lB;showboards
+if;arg:"4;==;"lC;chatwho
+copytext;tmp;arg:"4;"1;"1
+if;tmp;==;"^;readmail
+if;tmp;==;"*;deletemail
+if;tmp;==;"@;composemail
+if;tmp;==;"#;swithboard
+if;tmp;==;".;postboard
+if;tmp;==;"!;switchtarget
+if;tmp;==;"$;messagetarget
+if;tmp;==;"%;switchchat
+if;tmp;==;"&;messagechat
+set;tmp;"Invalid command sent to server.
+goto;ending
+id;showmail
+replacetext;mail;"/users/@/mails;"@;login
+dumpfile;mail;mail
+set;tmp;"~Inbox~
+eval;tmp;+=;mail
+goto;ending
+id;showboards
+dumpfile;"/board/boardl;boards
+replacetext;tmp;"~Board List~<br>@;"@;boards
+goto;ending
+id;disconnect
+set;room;"
+goto;dischat
+id;chatdisconnecting
+replacetext;tmp;"del @|del /relays/#;"|;nsemi
+replacetext;tmp;tmp;"@;con
+replacetext;tmp;tmp;"#;login
+shell;tmp
+set;tmp;"~Disconnected from dNET~
+goto;cending
+id;readmail
+replacetext;tmp2;"dnet»^;"^;arg:"4
+replacetext;tmp2;tmp2;"dnet»^;"
+replacetext;tmp2;tmp2;" ;"
+if;tmp2;!=;";injectRM
+set;tmp;"No mail specified.
+goto;ending
+id;injectRM
+replacetext;tmp;"/users/@/mail/;"@;login
+eval;tmp;+=;tmp2
+getfile;tm;tmp
+if;tm;!=;null;readok
+set;tmp;"No mail found by that name.
+goto;ending
+id;readok
+dumpfile;tmp;tmp
+replacetext;tmp3;"/users/@/mails;"@;login
+dumpfile;tmp3;unread
+set;re;"<br>
+eval;re;+=;tmp2
+set;tmp2;re
+eval;re;+=;" (unread)<br>
+eval;tmp2;+=;"<br>
+replacetext;tmp4;unread;re;tmp2
+if;tmp4;==;unread;ending
+replacetext;special;"/processing/@;"@;login
+replacetext;specm;"make /processing/@;"@;login
+id;readremre
+shell;specm
+getfile;speci;special
+eval;speci;+=;".
+dumpfile;special;specc
+if;specc;==;".;processreadok
+dumpfile;special;specc
+replacetext;specci;specc;"*;"
+if;specci;!=;specc;readremre
+id;readreset
+replacetext;tmpp;"del /processing/@;"@;login
+shell;tmpp
+eval;tmp;+=;"\n - Failed to remove unread tag due to process loop.
+goto;ending
+id;processreadok
+eval;speci;+=;"*
+dumpfile;special;specc
+replacetext;moo;specc;"**;"
+if;moo;!=;specc;readreset
+replacetext;red;"/users/@/new;"@;login
+dumpfile;red;ree
+eval;ree;-=;"1
+replacetext;tmpl;"file_clear /users/@/new|file_add /users/@/new $|file_clear /users/@/mails|file_add /users/@/mails %;"@;login
+replacetext;tmpl;tmpl;"|;nsemi
+replacetext;tmpl;tmpl;"$;ree
+replacetext;tmpl;tmpl;"%;tmp4
+shell;tmpl
+set;tmpp;"del 
+eval;tmpp;+=;special
+shell;tmpp
+goto;ending
+id;deletemail
+replacetext;delss;"dnet»*;"*;arg:"4
+replacetext;delss;delss;"dnet»*;"
+replacetext;delss;delss;" ;"
+if;del;!=;";injectDM
+set;tmp;"No mail specified.
+goto;ending
+id;injectDM
+replacetext;tmp;"/users/@/mail/$;"@;login
+replacetext;tmp;tmp;"$;delss
+getfile;tmp;tmp
+if;tmp;!=;null;delok
+set;tmp;"no such mail..
+goto;ending
+id;delok
+replacetext;special;"/processing/@;"@;login
+replacetext;specm;"make /processing/@;"@;login
+id;delokretry
+shell;specm
+getfile;speci;special
+eval;speci;+=;".
+dumpfile;special;specc
+if;specc;==;".;processdelok
+dumpfile;special;specc
+replacetext;specci;specc;"*;"
+if;specci;!=;specc;delokretry
+id;delreset
+replacetext;tmp;"del /processing/@;"@;login
+shell;tmp
+set;tmp;"Delete failed: Process loop. Try again.
+goto;ending
+id;processdelok
+eval;speci;+=;"*
+dumpfile;special;specc
+replacetext;moo;specc;"**;"
+if;moo;!=;specc;delreset
+set;del;"<br>
+eval;del;+=;delss
+replacetext;del2;"@ (unread)<br>;"@;del
+replacetext;tmp;"del /users/@/mail/$;"@;login
+replacetext;tmp;tmp;"$;delss
+shell;tmp
+replacetext;re;"/users/@/mails;"@;login
+dumpfile;re;ree
+replacetext;red;ree;del2;"<br>
+eval;del;+=;"<br>
+if;red;==;ree;delunread
+replacetext;unread;"/users/@/new;"@;login
+dumpfile;unread;ree
+eval;ree;-=;"1
+replacetext;tmp;"file_clear @|file_add @ ;"@;unread
+replacetext;tmp;tmp;"|;nsemi
+eval;tmp;+=;ree
+shell;tmp
+id;delunread
+replacetext;red;red;del;"<br>
+replacetext;tmp;"file_clear /users/@/mails|file_add /users/@/mails ;"@;login
+replacetext;tmp;tmp;"|;nsemi
+eval;tmp;+=;red
+shell;tmp
+replacetext;tmp;"del @;"@;special
+shell;tmp
+set;tmp;"message deleted..
+goto;ending
+id;composemail
+replacetext;compose;"dnet»@;"@;arg:"4
+replacetext;compose;compose;"dnet»@;"
+if;compose;!=;"CancelMail;mcancel
+replacetext;tmp;"file_clear @/mplace;"@;con
+shell;tmp
+set;tmp;"Mailing canceled.
+goto;ending
+id;mcancel
+replacetext;place;"@/mplace;"@;con
+dumpfile;place;mplace
+if;mplace;==;"message;cmailer
+replacetext;compose;compose;" ;"
+if;compose;!=;";injectM
+set;tmp;"No id entered.
+goto;ending
+id;injectM
+if;mplace;==;"subject;csub
+replacetext;mailto;"/users/@;"@;compose
+getfile;mailc;mailto
+if;mailc;!=;null;cto
+set;tmp;"Mail to account does not exist.
+goto;ending
+id;cto
+replacetext;tmp;"file_add @/mplace subject|file_clear @/mailto|file_add @/mailto #;"|;nsemi
+replacetext;tmp;tmp;"@;con
+replacetext;tmp;tmp;"#;compose
+shell;tmp
+replacetext;tmp;"Starting mail to @, send message subject.;"@;compose
+goto;ending
+id;csub
+replacetext;subject;compose;":;"|
+replacetext;subject;subject;"root;"|
+replacetext;subject;subject;"/;"|
+replacetext;subject;subject;"\;"\\
+replacetext;subject;subject;"<;"\<
+replacetext;subject;subject;">;"\>
+replacetext;subject;subject;"[semi];"|
+replacetext;subject;subject;"[newline];"|
+replacetext;subject;subject;spc;"
+replacetext;mailto;"@/mailto;"@;con
+dumpfile;mailto;mailto
+replacetext;tmp;"file_clear @/mplace|file_add @/mplace message|file_clear @/mailsub|file_add @/mailsub #;"|;nsemi
+replacetext;tmp;tmp;"@;con
+replacetext;tmp;tmp;"#;subject
+shell;tmp
+replacetext;tmp;"Mailing: @  ,  To: [semi]  - Send message.;"@;subject
+replacetext;tmp;tmp;"[semi];mailto
+goto;ending
+id;cmailer
+replacetext;message;compose;"\;"\\
+replacetext;message;message;"<;"\<
+replacetext;message;message;">;"\>
+replacetext;message;message;"[semi];"|
+replacetext;message;message;"[newline];"|
+length;leg;message
+if;leg;<;"701;mll
+set;tmp;"Length limit exceeded renter message.
+goto;ending
+id;mll
+replacetext;mailto;"@/mailto;"@;con
+replacetext;subject;"@/mailsub;"@;con
+dumpfile;subject;subject
+dumpfile;mailto;mailto
+id;mailloop
+replacetext;tmp;"/users/@/mail/;"@;mailto
+eval;tmp;+=;subject
+getfile;tmp;tmp
+if;tmp;==;null;mailok
+eval;subject;+=;"+
+goto;mailloop
+id;mailok
+replacetext;special;"/processing/@;"@;mailto
+replacetext;specm;"make /processing/@;"@;mailto
+id;mailokretry
+shell;specm
+getfile;speci;special
+eval;speci;+=;".
+dumpfile;special;specc
+if;specc;==;".;processmailok
+dumpfile;special;specc
+replacetext;specci;specc;"*;"
+if;specci;!=;specc;mailokretry
+id;mailreset
+replacetext;tmp;"del /processing/@;"@;mailto
+shell;tmp
+set;tmp;"Mailing failed: Process loop. Enter message again.
+goto;ending
+id;processmailok
+eval;speci;+=;"*
+dumpfile;special;specc
+replacetext;moo;specc;"**;"
+if;moo;!=;specc;mailreset
+replacetext;messagee;"$<br>From: @<br>%;"$;timestamp
+replacetext;messagee;messagee;"@;login
+replacetext;messagee;messagee;"%;message
+replacetext;unread;"/users/@/new;"@;mailto
+dumpfile;unread;ree
+eval;ree;+=;"1
+replacetext;mailed;"/users/@/mail/#;"@;mailto
+replacetext;mailed;mailed;"#;subject
+replacetext;tmp;"make /users/@/mail/#|file_add /users/@/mail/# ;"@;mailto
+replacetext;tmp;tmp;"|;nsemi
+replacetext;tmp;tmp;"#;subject
+eval;tmp;+=;messagee
+shell;tmp
+replacetext;tmp;"file_add /users/@/mails # (unread)<br>|file_clear %|file_add % ;"@;mailto
+replacetext;tmp;tmp;"|;nsemi
+replacetext;tmp;tmp;"%;unread
+replacetext;tmp;tmp;"#;subject
+eval;tmp;+=;ree
+shell;tmp
+replacetext;tmp;"file_clear @/mplace;"@;con
+shell;tmp
+set;tmp;"del 
+eval;tmp;+=;special
+shell;tmp
+set;tmp;"Mail sent.
+replacetext;screen;"/relays/@;"@;mailto
+getfile;tmpp;screen
+if;tmpp;!=;null;scrend
+goto;ending
+id;scrend
+dumpfile;screen;tmpp
+replacetext;screen;"New mail recieved from @.;"@;login
+replacetext;dnet;"extern 0 @ -2 #;"@;tmpp
+replacetext;dnet;dnet;"#;screen
+shell;dnet
+goto;ending
+id;switchtarget
+replacetext;it;"dnet»!;"!;arg:"4
+replacetext;it;it;"dnet»!;"
+replacetext;it;it;" ;"
+if;it;!=;";injectST
+set;tmp;"No target specified.
+goto;ending
+id;injectST
+replacetext;tmp;"file_clear @/itarget|file_add @/itarget #;"|;nsemi
+replacetext;tmp;tmp;"@;con
+replacetext;tmp;tmp;"#;it
+shell;tmp
+replacetext;tmp;"I-Target switched: @;"@;it
+goto;ending
+id;messagetarget
+replacetext;relay;"@/itarget;"@;con
+dumpfile;relay;re
+if;re;!=;";IMnull
+set;tmp;"Not target selected.
+goto;ending
+id;IMnull
+replacetext;REC;"/relays/@;"@;re
+getfile;rec;REC
+if;rec;!=;null;messTK
+set;tmp;"Target not found.
+goto;ending
+id;messTK
+dumpfile;REC;mess
+replacetext;it;"dnet»$;"$;arg:"4
+replacetext;it;it;"dnet»$;"
+replacetext;it;it;"\;"\\
+replacetext;it;it;"<;"\<
+replacetext;it;it;">;"\>
+replacetext;it;it;spc;"
+length;leg;it
+if;leg;<;"522;Ill
+set;tmp;"Length limit exceeded renter message.
+goto;ending
+id;Ill
+replacetext;screen;"IM - @: ;"@;login
+eval;screen;+=;it
+replacetext;dnet;"extern 0 @ -2 #;"@;mess
+replacetext;dnet;dnet;"#;screen
+shell;dnet
+set;tmp;null
+goto;ending
+id;switchchat
+replacetext;room;"dnet»%;"%;arg:"4
+replacetext;room;room;"dnet»%;"
+replacetext;room;room;" ;"
+replacetext;room;room;":;"|
+replacetext;room;room;"/;"|
+replacetext;room;room;"root;"|
+replacetext;room;room;"\;"\\
+replacetext;room;room;"<;"\<
+replacetext;room;room;">;"\>
+replacetext;room;room;"[semi];"|
+replacetext;room;room;"[newline];"|
+id;dischat
+replacetext;room2;"@/cplace;"@;con
+dumpfile;room2;room2
+if;room;!=;";injectSC
+if;room2;!=;";injectChatREAL
+if;arg:"4;==;"disconnect;chatdisconnecting
+set;tmp;"No room found.
+goto;ending
+id;injectChatREAL
+set;room;room2
+goto;leavechat
+id;injectSC
+if;room;!=;room2;rideit
+set;tmp;"Already entered into that chatroom.
+goto;ending
+id;rideit
+replacetext;special;"/chatroam/@;"@;room
+replacetext;specm;"make /chatroam/@;"@;room
+id;ChatRoamTry
+shell;specm
+getfile;speci;special
+eval;speci;+=;".
+dumpfile;special;specc
+if;specc;==;".;ChatRoamOk
+dumpfile;special;specc
+replacetext;specci;specc;"*;"
+if;specci;!=;specc;ChatRoamTry
+id;chatroamreset
+replacetext;tmp;"del /chatroam/@;"@;room
+shell;tmp
+set;tmp;"ChatRoam process Loop. Retry switch.
+goto;ending
+id;ChatRoamOk
+eval;speci;+=;"*
+dumpfile;special;specc
+replacetext;moo;specc;"**;"
+if;moo;!=;specc;chatroamreset
+if;room2;==;";noleave
+id;leavechat
+replacetext;special2;"/chatroam/@;"@;room2
+replacetext;specm2;"make /chatroam/@;"@;room2
+id;ChatRoamTry2
+shell;specm2
+getfile;speci;special2
+eval;speci;+=;".
+dumpfile;special2;specc
+if;specc;==;".;ChatRoamOk2
+dumpfile;special2;specc
+replacetext;specci;specc;"*;"
+if;specci;!=;specc;ChatRoamTry2
+id;chatroamreset2
+replacetext;tmp;"del /chatroam/@;"@;room2
+shell;tmp
+replacetext;tmp;"del /chatroam/@;"@;room
+shell;tmp
+set;tmp;"ChatRoam process Loop. Retry switch.
+goto;ending
+id;ChatRoamOk2
+eval;speci;+=;"*
+dumpfile;special2;specc
+replacetext;moo;specc;"**;"
+if;moo;!=;specc;chatroamreset2
+replacetext;chattenn;"/chatting/@;"@;room2
+replacetext;chatterss;"/chatters/@;"@;room2
+dumpfile;chattenn;chatten
+dumpfile;chatterss;chatters
+replacetext;remcha;"extern 0 [newline] -2 Room @;"[newline];arg:"1
+replacetext;remcha;remcha;"@;room2
+eval;remcha;+=;nsemi
+replacetext;chatten2;chatten;remcha;"
+replacetext;remcha;"@<br>;"@;login
+replacetext;chatters2;chatters;remcha;"
+replacetext;tmp;"file_clear /chatters/@|file_clear /chatting/@;"|;nsemi
+replacetext;tmp;tmp;"@;room2
+shell;tmp
+getfile;chatre;chatterss
+eval;chatre;+=;chatters2
+getfile;chatre;chattenn
+eval;chatre;+=;chatten2
+replacetext;chatEnter;": @ has left.;"@;login
+eval;chatEnter;+=;nsemi
+replacetext;chatten;chatten;nsemi;chatEnter
+shell;chatten
+set;tmp;"del 
+eval;tmp;+=;special2
+shell;tmp
+if;arg:"4;==;"disconnect;chatdisconnecting
+if;room;!=;room2;noleave
+replacetext;tmp;"file_clear @/cplace;"@;con
+shell;tmp
+set;tmp;null
+goto;ending
+id;noleave
+replacetext;chatting;"/chatting/@;"@;room
+getfile;cbo;chatting
+if;cbo;!=;null;cbskip
+replacetext;tmp;"make /chatting/@|make /chatters/@;"|;nsemi
+replacetext;tmp;tmp;"@;room
+shell;tmp
+id;cbskip
+replacetext;tmp;"file_add /chatting/@ extern 0 [newline] -2 Room @[semi];"@;room
+replacetext;tmp;tmp;"[newline];arg:"1
+shell;tmp
+replacetext;tmp;"file_add /chatters/@ [semi]<br>;"@;room
+replacetext;tmp;tmp;"[semi];login
+shell;tmp
+replacetext;chatters;"/chatters/@;"@;room
+replacetext;chatten;"/chatting/@;"@;room
+replacetext;tmp;"file_clear @/cplace|file_add @/cplace #;"|;nsemi
+replacetext;tmp;tmp;"@;con
+replacetext;tmp;tmp;"#;room
+shell;tmp
+dumpfile;chatten;chatten
+dumpfile;chatters;chatters
+replacetext;chatEnter;": @ has entered.;"@;login
+eval;chatEnter;+=;nsemi
+replacetext;chatten;chatten;nsemi;chatEnter
+shell;chatten
+set;tmp;"del 
+eval;tmp;+=;special
+shell;tmp
+goto;chatwhoskip
+id;chatwho
+replacetext;chatters;"@/cplace;"@;con
+dumpfile;chatters;room
+if;room;==;";nochatr
+replacetext;chatters;"/chatters/@;"@;room
+dumpfile;chatters;chatters
+id;chatwhoskip
+replacetext;tmp;"Entered Room @ , People in room:<br>[semi];"@;room
+replacetext;tmp;tmp;"[semi];chatters
+goto;ending
+id;messagechat
+replacetext;mess;"dnet»&;"&;arg:"4
+replacetext;mess;mess;"dnet»&;"
+replacetext;mess;mess;"\;"\\
+replacetext;mess;mess;"<;"\<
+replacetext;mess;mess;">;"\>
+replacetext;mess;mess;spc;"
+length;leg;mess
+if;leg;<;"356;Cll
+set;tmp;"Length limit exceeded renter message.
+goto;ending
+id;Cll
+replacetext;room;"@/cplace;"@;con
+dumpfile;room;room
+if;room;!=;";Mnull
+id;nochatr
+set;tmp;"Not in chat room.
+goto;ending
+id;Mnull
+replacetext;chattenn;"/chatting/@;"@;room
+id;redumpc
+dumpfile;chattenn;chatten
+if;chatten;==;";redumpc
+replacetext;chatEnter;" - @: ;"@;login
+eval;chatEnter;+=;mess
+eval;chatEnter;+=;nsemi
+replacetext;chatten;chatten;nsemi;chatEnter
+shell;chatten
+set;tmp;null
+id;ending
+replacetext;processcheck;"file_clear @;"@;processing
+shell;processcheck
+id;cending
+if;tmp;==;null;noreply
+replacetext;dnet;"extern 0 @ -2 ;"@;arg:"1
+eval;dnet;+=;tmp
+shell;dnet
+id;noreply
+if;Recon;!=;"1;NoRecon
+set;arg:"1;ReconCon
+set;arg:"4;ReconLogin
+set;Recon;null
+goto;inplOk
+id;NoRecon
+replacetext;Loh;arg:"4;"\;"\\
+replacetext;Loh;arg:"4;"<;"\<
+replacetext;Loh;arg:"4;">;"\>
+getfile;speciallog;"/logging
+replacetext;logged;"@ # $ %;"@;timestamp
+replacetext;logged;logged;"#;arg:"1
+replacetext;logged;logged;"$;in
+replacetext;logged;logged;"%;Loh
+eval;logged;+=;spc
+eval;speciallog;+=;logged
+end;processend
