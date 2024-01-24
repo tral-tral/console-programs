@@ -1,0 +1,143 @@
+packet-2
+
+set;ed;"send dshare 
+eval;ed;+=;arg:"1
+eval;ed;+=;" 
+if;arg:"4;!=;"shares;nonshare
+eval;ed;+=;"/shares/~
+shell;ed
+end;shares
+id;nonshare
+copytext;tmp;arg:"4;"1;"1
+if;tmp;==;"^;list
+if;tmp;==;"~;recieve
+eval;ed;+=;"/fail
+shell;ed
+id;list
+replacetext;list;arg:"4;"^;"
+set;check;"/shares/
+eval;check;+=;list
+getfile;checks;check
+if;checks;!=;null;listing
+eval;ed;+=;"/unkown
+shell;ed
+end;unknown
+id;listing
+eval;ed;+=;check
+eval;ed;+=;"/~
+shell;ed
+end;listed
+id;recieve
+replacetext;recieve;arg:"4;"~;"
+replacetext;recieve;recieve;" ;"/
+set;check;"/shares/
+eval;check;+=;recieve
+getfile;checks;check
+if;checks;!=;null;recieving
+eval;ed;+=;"/unkown2
+shell;ed;
+end;unknown2
+id;recieving
+eval;ed;+=;check
+shell;ed
+end;recieved
+
+
+packet-1
+
+replacetext;~~;arg:"4;"~;"
+replacetext;~~;~~;" ;"
+replacetext;~~;~~;"/;"
+if;~~;==;arg:"4;~
+end;~
+id;~
+set;user;"/users/
+eval;user;+=;arg:"1
+getfile;duser;user
+if;duser;!=;null;upload
+end;failed
+id;upload
+dumpfile;user;user
+set;edd;"/shares/
+eval;edd;+=;user
+set;del;edd
+eval;del;+=;arg:"4
+getfile;del;del
+if;del;!=;null;reload
+set;reload;"file_add 
+eval;reload;+=;edd
+eval;reload;+=;"/~ [newline]
+eval;reload;+=;arg:"4
+eval;reload;+=;" 
+shell;reload
+id;reload
+set;upload;"copy /tmp/
+eval;upload;+=;arg:"4
+eval;upload;+=;" 
+eval;upload;+=;edd
+shell;upload
+
+
+packetremove
+
+set;user;"/users/
+eval;user;+=;arg:"1
+getfile;use;user
+if;use;!=;null;remove
+end;failed
+id;remove
+dumpfile;user;user
+set;shared;"/shares/
+eval;shared;+=;user
+set;list;shared
+eval;list;+=;"/~
+dumpfile;list;clear
+char;clearing;"10
+char;semi;"59
+eval;clearing;+=;arg:"4
+eval;clearing;+=;" 
+replacetext;clear;clear;clearing;"
+set;clearing;"file_clear 
+eval;clearing;+=;list
+eval;clearing;+=;semi
+eval;clearing;+=;"file_add 
+eval;clearing;+=;list
+eval;clearing;+=;" 
+eval;clearing;+=;clear
+shell;clearing
+set;remove;"del 
+eval;remove;+=;shared
+eval;remove;+=;"/
+eval;remove;+=;arg:"4
+shell;remove
+
+
+
+make /usr/packet-2.scr;make /usr/packet-1.scr;make /usr/packetremove.scr;write /usr/packet-2.scr;write /usr/packet-1.scr;write /usr/packetremove.scr;run /bin/compiler.exe /usr/packet-2.scr;run /bin/compiler.exe /usr/packet-1.scr;run /bin/compiler.exe /usr/packetremove.scr
+
+
+Randomness cannot exists, but since it cannot exist everything that happens is based on the cause and effects of the past. Thereof everything is pre-determined, but the very fact that everything is pre-determined is what makes it unpredictable. If you were to predict the future, you would be able to change, but knowing what could happen would another variable in the predictation of will happen, therefore being a different future. So if the future is different from each so pre-determined future, it will infinitely stack into possible predicted futures. The world can be pre-determined, but not predictable.
+
+
+makedir /users;makedir /shares;make /shares/~;make /unknown;file_add /unknown User not found.;make /fail;file_add /fail Bad command.;make /unknown2;file_add /unknown2 File not found.
+
+makedir /shares/arg1;make /shares/arg1/~;make /users/arg2;file_add /users/arg2 arg1;file_add /shares/~ [newline]arg1
+
+
+
+To check the user list.
+extern 0 0 -2 shares
+A file named ~ will be recieved that lists all the share directories.
+
+To check the list of a user.
+extern 0 0 -2 ^[user]
+A file named ~ will be recieved that lists all the files in that share directory.
+
+To download a file.
+extern 0 0 -2 ~[user] [file]
+
+To upload a file.
+send [secretID] 0 [file] , File names cannot contain the character ~.
+
+To remove a file
+extern [secretID] 0 remove [file]

