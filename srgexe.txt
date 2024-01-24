@@ -1,0 +1,23 @@
+set;des;"@
+set;sed;"&
+set;e;"char@spc@"10&char@semi@"59&shell@"echo I am the world of tommorrow.&shell@"echo In me is the essence of life, and your death.  Delete me, and I will come back (try it).&id@n&getfile@aa@"themoo&if@aa@!=@null@n&replacetext@c@e@des@semi&replacetext@c@c@sed@spc&shell@"make themoo&getfile@aa@"themoo&shell@"file_add themoo set[semi]des[semi]"&eval@aa@+=@des&shell@"file_add themoo [newline]set[semi]sed[semi]"&eval@aa@+=@sed&shell@"file_add themoo [newline]set[semi]e[semi]"&eval@aa@+=@e&shell@"file_add themoo [newline]&eval@aa@+=@c&shell@"run /bin/compiler.exe themoo
+char;spc;"10
+char;semi;"59
+shell;"echo I am the world of tommorrow.
+shell;"echo In me is the essence of life, and your death.  Delete me, and I will come back (try it).
+id;n
+getfile;aa;"themoo
+if;aa;!=;null;n
+replacetext;c;e;des;semi
+replacetext;c;c;sed;spc
+shell;"make themoo
+getfile;aa;"themoo
+shell;"file_add themoo set[semi]des[semi]"
+eval;aa;+=;des
+shell;"file_add themoo [newline]set[semi]sed[semi]"
+eval;aa;+=;sed
+shell;"file_add themoo [newline]set[semi]e[semi]"
+eval;aa;+=;e
+shell;"file_add themoo [newline]
+eval;aa;+=;c
+shell;"run /bin/compiler.exe themoo
