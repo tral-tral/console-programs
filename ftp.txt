@@ -116,9 +116,6 @@ shell;remove
 make /usr/packet-2.scr;make /usr/packet-1.scr;make /usr/packetremove.scr;write /usr/packet-2.scr;write /usr/packet-1.scr;write /usr/packetremove.scr;run /bin/compiler.exe /usr/packet-2.scr;run /bin/compiler.exe /usr/packet-1.scr;run /bin/compiler.exe /usr/packetremove.scr
 
 
-Randomness cannot exists, but since it cannot exist everything that happens is based on the cause and effects of the past. Thereof everything is pre-determined, but the very fact that everything is pre-determined is what makes it unpredictable. If you were to predict the future, you would be able to change, but knowing what could happen would another variable in the predictation of will happen, therefore being a different future. So if the future is different from each so pre-determined future, it will infinitely stack into possible predicted futures. The world can be pre-determined, but not predictable.
-
-
 makedir /users;makedir /shares;make /shares/~;make /unknown;file_add /unknown User not found.;make /fail;file_add /fail Bad command.;make /unknown2;file_add /unknown2 File not found.
 
 makedir /shares/arg1;make /shares/arg1/~;make /users/arg2;file_add /users/arg2 arg1;file_add /shares/~ [newline]arg1
