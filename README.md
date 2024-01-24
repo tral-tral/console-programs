@@ -11,9 +11,9 @@ On a client machine, run the script from client.txt and use the commands listed.
 ## baconbits encryption
 Encrypt a text file with a password. Can also copy the code into existing programs to intergrate encryption.
 To use the program as is,
-arg 1: file name
-arg 2: password
-arg 3: blank or '2' Using 2 will reverse the encryption for decrypting a file.
+- arg 1: file name
+- arg 2: password
+- arg 3: blank or '2' Using 2 will reverse the encryption for decrypting a file.
 
 
 ## File server (ftp.txt)
