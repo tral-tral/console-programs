@@ -1,0 +1,363 @@
+if;arg:"1;==;"add;add
+if;arg:"1;==;"remove;remove
+if;arg:"1;==;"clear;clear
+if;arg:"1;==;"play;play
+if;arg:"1;==;"send;send
+if;arg:"1;==;"create;create
+if;arg:"1;==;"wcreate;wcreate
+shell;"echo error: invalid params
+end;"0
+id;errf
+shell;"echo error: file does not exist!
+end;"0
+id;add
+set;file;arg:"2
+set;name;arg:"3
+set;f;"file_exists 
+eval;f;+=;file
+shell;f
+if;err_level;!=;"true;errf
+if;name;==;null;null
+set;b;"file_exists /VC/vdir/
+eval;b;+=;name
+shell;b
+if;err_level;==;"true;old
+set;a;"makedir /VC/vdir/
+shell;"echo adding new voice directory.
+eval;a;+=;name
+shell;a
+id;old
+set;a;"run /bin/resequence.exe 
+eval;a;+=;file
+eval;a;+=;" /VC/vdir/
+eval;a;+=;name
+shell;a
+if;err_level;==;"true;wend
+set;a;"copy /VC/vdir/
+eval;a;+=;name
+eval;a;+=;"/(space).vcl /VC/tmp
+shell;a
+shell;"rename /VC/tmp/(space).vcl %
+shell;"run /bin/trunicate.exe /VC/tmp/% 0
+set;a;"copy /VC/tmp/% /VC/vdir/
+eval;a;+=;name
+shell;a
+shell;"del /VC/tmp/%
+shell;"echo done!
+end;"0
+id;remove
+set;name;arg:"2
+set;a;"/VC/vdir/
+eval;a;+=;name
+set;b;"file_exists 
+eval;b;+=;a
+shell;b
+if;err_level;!=;"true;errf
+set;b;"del 
+eval;b;+=;a
+shell;b
+shell;"echo vDir Removed.
+end;"0
+id;clear
+set;e;arg:"2
+set;a;"run /bin/trunicate.exe /VC/vdir/
+eval;a;+=;e
+eval;a;+=;"/% 0
+shell;a
+shell;"echo Voice Cleared.
+end;"0
+id;play
+set;a;"run /bin/playback.exe /VC/vdir/
+eval;a;+=;arg:"2
+eval;a;+=;"/%
+shell;a
+end;"0
+id;send
+if;arg:"4;!=;null;sd
+set;dest;"0
+goto;sd2
+id;sd
+set;dest;arg:"4
+id;sd2
+if;arg:"3;!=;null;ss
+set;src;"0
+goto;ss2
+id;ss
+set;src;arg:"3
+id;ss2
+set;a;"copy /VC/vdir/
+eval;a;+=;arg:"2
+eval;a;+=;"/% /VC/tmp
+shell;a
+shell;"rename /VC/tmp/% record.vcl
+set;send;"send 
+eval;send;+=;src
+eval;send;+=;" 
+eval;send;+=;dest
+eval;send;+=;" /VC/tmp/record.vcl
+shell;send
+shell;"del /VC/tmp/record.vcl
+end;"0
+id;null
+shell;"echo error: null name
+end;"0
+id;wcreate
+set;e;arg:"2
+set;w;"/VC/vdir/
+eval;w;+=;e
+set;f;w
+eval;f;+=;"/
+eval;w;+=;"/%
+getfile;b;w
+shell;"echo VoiceWord: 
+set;input:"1;null
+id;Wi
+if;input:"1;==;null;Wi
+if;input:"1;==;"[Wend];wend
+set;a;"echo word: 
+eval;a;+=;input:"1
+shell;a
+set;word;input:"1
+id;wdd
+set;c;f
+eval;c;+=;word
+eval;c;+=;".vcl
+getfile;d;c
+eval;b;+=;d
+goto;wcreate
+id;spc
+set;copy;"(space)
+goto;sw
+id;create
+set;e;arg:"2
+set;w;"/VC/vdir/
+eval;w;+=;e
+set;f;w
+eval;f;+=;"/
+eval;w;+=;"/%
+getfile;b;w
+shell;"echo VoiceLine: 
+set;input:"1;null
+id;Ci
+if;input:"1;==;null;Ci
+set;voice;input:"1
+length;leg;voice
+set;a;"1
+set;c;"echo creating voice.. 
+eval;c;+=;voice
+shell;c
+id;con
+copytext;copy;voice;a;a
+if;copy;==;" ;spc
+id;sw
+set;c;f
+eval;c;+=;copy
+eval;c;+=;".vcl
+getfile;d;c
+eval;b;+=;d
+eval;a;+=;"1
+if;a;<=;leg;con
+id;wend
+shell;"echo Done..!
+end;"0
+
+
+To install, copy the VC directory into your root.
+
+Run vso inside VC to perform operations from the program.
+
+
+Params-
+create [vdir to create voice with]
+wcreate [vdir to wcreate voice with]
+add [voice file] [new vdir]
+remove [vdir to remove]
+play [vdir to play]
+clear [vdir to clear]
+send [vdir to send]
+
+create - enter string wihen you have available letters
+wcreate - enter the word or letter you have one at a time , enter [Wend] to end
+add - adds a new voice directory
+remove - removes a voice directory
+plays - plays a created voice
+clear - clears created voice
+send - sends created voice as record.vcl
+
+
+
+
+
+
+
+
+ A a B b C c D d E e F f G g H h I i J j K k L l M m N n O o P p Q q R r S s T t U u V v W w X x Y y Z z 1 2 3 4 5 6 7 8 9 0 ~ ` ! @ # $ % ^ & * ( ) - = _ + [ ] } { | \ ; : " ' ? / > < , . 
+
+
+
+
+ ! " # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = >  ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~ ‘ ’ ¡ ¢ £ ¤ ¥ ¦ § ¨ © ª « ¬ ­ ® ¯ ° ± ² ³ ´ µ ¶ · ¸ ¹ º » ¼ ½ ¾ ¿ À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï Ð Ñ Ò Ó Ô Õ Ö × Ø Ù Ú Û Ü Ý Þ ß à á â ã ä å æ ç è é ê ë ì í î ï ð ñ ò ó ô õ ÷ ø ù ú ü ý þ ÿ 
+
+
+makedir /VC;makedir /VC/vdir;makedir /VC/tmp;hide /VC/tmp;make /VC/vso;file_add /VC/vso if[semi]arg:"1[semi]==[semi]"add[semi]add
+if[semi]arg:"1[semi]==[semi]"remove[semi]remove
+if[semi]arg:"1[semi]==[semi]"clear[semi]clear
+if[semi]arg:"1[semi]==[semi]"play[semi]play
+if[semi]arg:"1[semi]==[semi]"send[semi]send
+if[semi]arg:"1[semi]==[semi]"create[semi]create
+if[semi]arg:"1[semi]==[semi]"wcreate[semi]wcreate
+shell[semi]"echo error: invalid params
+end[semi]"0
+id[semi]errf
+shell[semi]"echo error: file does not exist!
+end[semi]"0
+id[semi]add
+set[semi]file[semi]arg:"2
+set[semi]name[semi]arg:"3
+set[semi]f[semi]"file_exists 
+eval[semi]f[semi]+=[semi]file
+shell[semi]f
+if[semi]err_level[semi]!=[semi]"true[semi]errf
+if[semi]name[semi]==[semi]null[semi]null
+set[semi]b[semi]"file_exists /VC/vdir/
+eval[semi]b[semi]+=[semi]name
+shell[semi]b
+if[semi]err_level[semi]==[semi]"true[semi]old
+set[semi]a[semi]"makedir /VC/vdir/
+shell[semi]"echo adding new voice directory.
+eval[semi]a[semi]+=[semi]name
+shell[semi]a
+id[semi]old
+set[semi]a[semi]"run /bin/resequence.exe 
+eval[semi]a[semi]+=[semi]file
+eval[semi]a[semi]+=[semi]" /VC/vdir/
+eval[semi]a[semi]+=[semi]name
+shell[semi]a
+if[semi]err_level[semi]==[semi]"true[semi]wend
+set[semi]a[semi]"copy /VC/vdir/
+eval[semi]a[semi]+=[semi]name
+eval[semi]a[semi]+=[semi]"/(space).vcl /VC/tmp
+shell[semi]a
+shell[semi]"rename /VC/tmp/(space).vcl %
+shell[semi]"run /bin/trunicate.exe /VC/tmp/% 0
+set[semi]a[semi]"copy /VC/tmp/% /VC/vdir/
+eval[semi]a[semi]+=[semi]name
+shell[semi]a
+shell[semi]"del /VC/tmp/%
+shell[semi]"echo done!
+end[semi]"0
+id[semi]remove
+set[semi]name[semi]arg:"2
+set[semi]a[semi]"/VC/vdir/
+eval[semi]a[semi]+=[semi]name
+set[semi]b[semi]"file_exists 
+eval[semi]b[semi]+=[semi]a
+shell[semi]b
+if[semi]err_level[semi]!=[semi]"true[semi]errf
+set[semi]b[semi]"del 
+eval[semi]b[semi]+=[semi]a
+shell[semi]b
+shell[semi]"echo vDir Removed.
+end[semi]"0
+id[semi]clear
+set[semi]e[semi]arg:"2
+set[semi]a[semi]"run /bin/trunicate.exe /VC/vdir/
+eval[semi]a[semi]+=[semi]e
+eval[semi]a[semi]+=[semi]"/% 0
+shell[semi]a
+shell[semi]"echo Voice Cleared.
+end[semi]"0
+id[semi]play
+set[semi]a[semi]"run /bin/playback.exe /VC/vdir/
+eval[semi]a[semi]+=[semi]arg:"2
+eval[semi]a[semi]+=[semi]"/%
+shell[semi]a
+end[semi]"0
+id[semi]send
+if[semi]arg:"4[semi]!=[semi]null[semi]sd
+set[semi]dest[semi]"0
+goto[semi]sd2
+id[semi]sd
+set[semi]dest[semi]arg:"4
+id[semi]sd2
+if[semi]arg:"3[semi]!=[semi]null[semi]ss
+set[semi]src[semi]"0
+goto[semi]ss2
+id[semi]ss
+set[semi]src[semi]arg:"3
+id[semi]ss2
+set[semi]a[semi]"copy /VC/vdir/
+eval[semi]a[semi]+=[semi]arg:"2
+eval[semi]a[semi]+=[semi]"/% /VC/tmp
+shell[semi]a
+shell[semi]"rename /VC/tmp/% record.vcl
+set[semi]send[semi]"send 
+eval[semi]send[semi]+=[semi]src
+eval[semi]send[semi]+=[semi]" 
+eval[semi]send[semi]+=[semi]dest
+eval[semi]send[semi]+=[semi]" /VC/tmp/record.vcl
+shell[semi]send
+shell[semi]"del /VC/tmp/record.vcl
+end[semi]"0
+id[semi]null
+shell[semi]"echo error: null name
+end[semi]"0
+id[semi]wcreate
+set[semi]e[semi]arg:"2
+set[semi]w[semi]"/VC/vdir/
+eval[semi]w[semi]+=[semi]e
+set[semi]f[semi]w
+eval[semi]f[semi]+=[semi]"/
+eval[semi]w[semi]+=[semi]"/%
+getfile[semi]b[semi]w
+shell[semi]"echo VoiceWord: 
+set[semi]input:"1[semi]null
+id[semi]Wi
+if[semi]input:"1[semi]==[semi]null[semi]Wi
+if[semi]input:"1[semi]==[semi]"[Wend][semi]wend
+set[semi]a[semi]"echo word: 
+eval[semi]a[semi]+=[semi]input:"1
+shell[semi]a
+set[semi]word[semi]input:"1
+id[semi]wdd
+set[semi]c[semi]f
+eval[semi]c[semi]+=[semi]word
+eval[semi]c[semi]+=[semi]".vcl
+getfile[semi]d[semi]c
+eval[semi]b[semi]+=[semi]d
+goto[semi]wcreate
+id[semi]spc
+set[semi]copy[semi]"(space)
+goto[semi]sw
+id[semi]create
+set[semi]e[semi]arg:"2
+set[semi]w[semi]"/VC/vdir/
+eval[semi]w[semi]+=[semi]e
+set[semi]f[semi]w
+eval[semi]f[semi]+=[semi]"/
+eval[semi]w[semi]+=[semi]"/%
+getfile[semi]b[semi]w
+shell[semi]"echo VoiceLine: 
+set[semi]input:"1[semi]null
+id[semi]Ci
+if[semi]input:"1[semi]==[semi]null[semi]Ci
+set[semi]voice[semi]input:"1
+length[semi]leg[semi]voice
+set[semi]a[semi]"1
+set[semi]c[semi]"echo creating voice.. 
+eval[semi]c[semi]+=[semi]voice
+shell[semi]c
+id[semi]con
+copytext[semi]copy[semi]voice[semi]a[semi]a
+if[semi]copy[semi]==[semi]" [semi]spc
+id[semi]sw
+set[semi]c[semi]f
+eval[semi]c[semi]+=[semi]copy
+eval[semi]c[semi]+=[semi]".vcl
+getfile[semi]d[semi]c
+eval[semi]b[semi]+=[semi]d
+eval[semi]a[semi]+=[semi]"1
+if[semi]a[semi]<=[semi]leg[semi]con
+id[semi]wend
+shell[semi]"echo Done..!
+end[semi]"0;run /bin/compiler.exe /VC/vso

@@ -1,0 +1,102 @@
+shell;"echo Dev-Archiver  -by Dever
+char;semi;"59
+char;spc;"10
+set;filenum;"0
+init_list;filearchive
+init_list;filepaths
+shell;"echo archive-name: 
+set;input:"1;null
+id;namen
+if;input:"1;==;null;namen
+set;archivename;input:"1
+replacetext;archivename;archivename;" ;"
+replacetext;archivename;archivename;semi;"
+replacetext;archivename;archivename;spc;"
+replacetext;dis;"echo archivename: @;"@;archivename
+shell;dis
+shell;"echo archive-pass:    [none] for none
+set;input:"1;null
+id;passn
+if;input:"1;==;null;passn
+set;fv;input:"1
+replacetext;fv;fv;spc;"
+replacetext;fv;fv;semi;"
+replacetext;fv;pass;"DevArch»;"
+replacetext;dis;"echo archive: @;"@;fv
+shell;dis
+id;adding
+shell;"echo add-file:    [cancel] to cancel  [archive] to start archiving 
+set;input:"1;null
+id;adn
+if;input:"1;==;null;adn
+if;input:"1;==;"[archive];archi
+if;input:"1;==;"[cancel];cancel
+replacetext;input:"1;input:"1;"DevArch»;"
+getfile;checkf;input:"1
+if;checkf;==;null;ferror
+replacetext;dis;"echo adding file: @;"@;input:"1
+shell;dis
+eval;filenum;+=;"1
+set;dis;"
+eval;dis;+=;checkf
+set;filearchive:filenum;dis
+set;filepaths:filenum;input:"1
+goto;adding
+id;enum
+shell;"echo no files to archive..
+goto;adding
+id;ferror
+shell;"echo file does not exist..
+goto;adding
+id;archi
+if;filenum;<;"1;enum
+shell;"echo archiving...
+set;archivevalue;"charDevArch»SemisemiDevArch»Semi"59DevArch»SpacecharDevArch»SemispcDevArch»Semi"10DevArch»SpaceshellDevArch»Semi"echo Dev-Archive		-archive software by DeverDevArch»Space
+if;input:"2;==;"[none];continuep
+replacetext;dis;"shellDevArch»Semi"echo PASS:DevArch»SpacesetDevArch»Semiinput:"1DevArch»SeminullDevArch»SpaceidDevArch»SemipassingDevArch»SpaceifDevArch»Semiinput:"1DevArch»Semi==DevArch»SeminullDevArch»SemipassingDevArch»SpaceifDevArch»Semiinput:"1DevArch»Semi==DevArch»Semi"DevArch»passDevArch»SemicpiDevArch»SpaceshellDevArch»Semi"echo ~invalid password~DevArch»SpaceendDevArch»SemiinvalidDevArch»SpaceidDevArch»SemicpiDevArch»Space;"DevArch»pass;fv
+eval;archivevalue;+=;dis
+id;continuep
+set;adf;"1
+id;addingfiles
+replacetext;dis;"shellDevArch»Semi"make DevArch»fileDevArch»Space;"DevArch»file;filearchive:adf
+eval;archivevalue;+=;dis
+eval;adf;+=;"1
+if;adf;<=;filenum;addingfiles
+set;adf;"1
+id;filegets
+replacetext;dis;"getfileDevArch»SemiDevArch»numDevArch»Semi"DevArch»fileDevArch»Space;"DevArch»num;adf
+replacetext;dis;dis;"DevArch»file;filearchive:adf
+eval;archivevalue;+=;dis
+eval;adf;+=;"1
+if;adf;<=;filenum;filegets
+set;adf;"1
+id;freplace
+dumpfile;filepaths:adf;fv
+replacetext;fv;fv;"DevArch»;"
+replacetext;fv;fv;semi;"DevArch»Sm
+replacetext;fv;fv;spc;"DevArch»Spc
+replacetext;dis;"replacetextDevArch»SemiaDevArch»numDevArch»Semi"DevArch»fileDevArch»Semi"DevArch»SmDevArch»SemisemiDevArch»SpacereplacetextDevArch»SemiaDevArch»numDevArch»SemiaDevArch»numDevArch»Semi"DevArch»spcDevArch»SemispcDevArch»Space;"DevArch»num;adf
+replacetext;dis;dis;"DevArch»file;fv
+eval;archivevalue;+=;dis
+eval;adf;+=;"1
+if;adf;<=;filenum;freplace
+set;adf;"1
+id;fevals
+replacetext;dis;"evalDevArch»SemiDevArch»numDevArch»Semi+=DevArch»SemiaDevArch»numDevArch»Space;"DevArch»num;adf
+eval;archivevalue;+=;dis
+eval;adf;+=;"1
+if;adf;<=;filenum;fevals
+eval;archivevalue;+=;"endDevArch»Semiunarchive
+replacetext;archivevalue;archivevalue;"DevArch»Semi;semi
+replacetext;archivevalue;archivevalue;"DevArch»Space;spc
+replacetext;dis;"make @;"@;archivename
+replacetext;fv;"run /bin/compiler.exe @;"@;archivename
+shell;dis
+getfile;dis;archivename
+eval;dis;+=;archivevalue
+shell;fv
+shell;"echo ~Archived~
+end;archived
+id;cancel
+shell;"echo ~Archive Canceled~
+end;cancel
