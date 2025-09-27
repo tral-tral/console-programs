@@ -1,0 +1,44 @@
+shell;"echo PureNet - coded by Dever 10/11/04
+char;semi;"59
+if;arg:"4;!=;null;repn
+set;arg:"4;"null
+id;repn
+set;check;"/tmp/
+eval;check;+=;arg:"4
+set;clearcheck;"del /tmp/
+eval;clearcheck;+=;arg:"4
+set;ext;"extern 
+eval;ext;+=;arg:"2
+eval;ext;+=;" 
+eval;ext;+=;arg:"1
+eval;ext;+=;" 
+eval;ext;+=;arg:"3
+eval;ext;+=;" 
+shell;"echo Waiting for input..
+id;rett
+set;input:"1;null
+id;n
+getfile;checks;check
+if;checks;!=;null;check
+if;input:"1;==;null;n
+replacetext;tmp2;input:"1;semi;"
+set;tmp;"echo purenet> 
+eval;tmp;+=;tmp2
+shell;tmp
+if;tmp2;==;".exit;exit
+set;tmp;ext
+eval;tmp;+=;tmp2
+shell;tmp
+goto;rett
+id;check
+dumpfile;check;tmp2
+shell;clearcheck
+replacetext;tmp2;tmp2;semi;"{S}
+set;tmp;"echo 
+eval;tmp;+=;tmp2
+shell;tmp
+goto;rett
+id;exit
+if;arg:"5;==;"lock;rett
+shell;"echo leaving purenet..
+end;exit

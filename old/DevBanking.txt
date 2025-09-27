@@ -1,0 +1,457 @@
+dumpfile;"/sys/src;src
+char;semi;"59
+char;spc;"10
+id;Res
+set;cin;"cin
+shell;"echo DevBanking
+id;rs
+shell;"echo
+shell;"echo commands: login , balanceof
+set;input:"1;null
+id;nb
+if;input:"1;==;null;nb
+if;input:"1;!=;"I am Dever;CO
+shell;"echo Returning to console..
+end;return
+id;CO
+if;input:"1;==;"login;login
+if;input:"1;==;"^create;create
+if;input:"1;==;"balanceof;obalance
+goto;rs
+id;create
+shell;"echo Name: 
+set;input:"1;null
+id;Cn
+if;input:"1;==;null;Cn
+set;accname;input:"1
+length;ccc;accname
+if;ccc;<=;"7;badname
+shell;"Account name too long.
+goto;create
+id;badname
+replacetext;accname;accname;semi;"
+replacetext;accname;accname;" ;"
+set;dname;"echo create account: 
+eval;dname;+=;accname
+shell;dname
+shell;"echo Pass: 
+set;input:"1;null
+id;Cp
+if;input:"1;==;null;Cp
+set;pass;input:"1
+replacetext;pass;pass;semi;"
+replacetext;pass;pass;spc;"
+replacetext;pass;pass;" ;"
+set;dname;"echo creating account 
+eval;dname;+=;accname
+eval;dname;+=;" with the password 
+eval;dname;+=;pass
+shell;dname
+set;log;"extern 
+eval;log;+=;src
+eval;log;+=;" 
+eval;log;+=;accname
+eval;log;+=;" create 
+eval;log;+=;pass
+shell;log
+shell;"del /tmp/.e
+shell;"delay 30
+dumpfile;"/tmp/.e;check
+if;check;==;"success;Itsk
+if;check;==;null;Eror
+shell;"echo Error: account already in use
+goto;Res
+id;Itsk
+shell;"echo account created.
+goto;Res
+id;login
+shell;"echo Account Name: 
+set;input:"1;null
+id;nl
+if;input:"1;==;null;nl
+set;accname;input:"1
+replacetext;accname;accname;semi;"
+replacetext;accname;accname;spc;"
+replacetext;accname;accname;" ;"
+set;dname;"echo account: 
+eval;dname;+=;accname
+shell;dname
+shell;"echo Account Pass: 
+set;input:"1;null
+id;np
+if;input:"1;==;null;np
+set;pass;input:"1
+replacetext;pass;pass;semi;"
+replacetext;pass;pass;spc;"
+replacetext;pass;pass;" ;"
+shell;"echo logging in..
+set;log;"extern 
+eval;log;+=;src
+eval;log;+=;" 
+eval;log;+=;accname
+eval;log;+=;" logging 
+eval;log;+=;pass
+shell;log
+shell;"del /tmp/money
+shell;"delay 40
+dumpfile;"/tmp/money;check
+if;check;!=;"fail;loggind
+shell;"echo Invalid Account or Password.
+goto;rs
+id;loggind
+if;check;==;null;Eror
+set;cin;"nic
+set;dname;"echo Balance: 
+eval;dname;+=;check
+shell;dname
+id;logging
+if;cin;==;"cin;Res
+set;dname;"echo Logged In As: 
+eval;dname;+=;accname
+shell;dname
+shell;"echo 
+id;k
+shell;"echo commands: transfer , logout , balance , log
+set;input:"1;null
+id;ng
+if;input:"1;==;null;ng
+if;input:"1;==;"transfer;trans
+if;input:"1;==;"logout;logout
+if;input:"1;==;"balance;balance
+if;input:"1;==;"log;log
+goto;k
+id;trans
+shell;"echo Ammount: 
+set;input:"1;null
+id;na
+if;input:"1;==;null;na
+set;dname;input:"1
+set;pass;input:"1
+eval;dname;+=;"1
+eval;dname;-=;"1
+if;dname;==;pass;ok
+shell;"echo Error: Invalid Ammount
+goto;logging
+id;ok
+set;dname;"echo transfering ammount: 
+eval;dname;+=;pass
+shell;dname
+shell;"echo To Account: 
+set;input:"1;null
+id;nt
+if;input:"1;==;null;nt
+set;dname;input:"1
+replacetext;dname;dname;semi;"
+replacetext;dname;dname;spc;"
+replacetext;dname;dname;" ;"
+set;tmp;"echo Transfer 
+eval;tmp;+=;pass
+eval;tmp;+=;" to  
+eval;tmp;+=;dname
+eval;tmp;+=;"? Y/N
+shell;tmp
+id;NnTr
+set;input:"1;null
+id;Ntr
+if;input:"1;==;null;Ntr
+if;input:"1;==;"N;logging
+if;input:"1;==;"n;logging
+if;input:"1;==;"Y;NtrY
+if;input:"1;==;"y;NtrY
+goto;NntR
+id;NtrY
+shell;"echo transfering..
+set;log;"extern 
+eval;log;+=;src
+eval;log;+=;" 
+eval;log;+=;pass
+eval;log;+=;" transfer 
+eval;log;+=;dname
+eval;log;+=;" 
+eval;log;+=;accname
+shell;log
+shell;"del /tmp/.e
+shell;"delay 120
+dumpfile;"/tmp/.e;check
+if;check;==;"success;ts
+shell;"echo Error: Invalid Account or Invalid Money
+goto;logging
+id;ts
+set;log;"echo 
+eval;log;+=;pass
+eval;log;+=;" transfered to 
+eval;log;+=;dname
+shell;log
+goto;logging
+id;balance
+set;log;"extern 
+eval;log;+=;src
+eval;log;+=;" 0 balance 
+eval;log;+=;accname
+shell;log
+shell;"del /tmp/money
+shell;"delay 10
+dumpfile;"/tmp/money;check
+if;check;==;null;Eror
+if;check;!=;"fail;obbb
+shell;"echo Account Not found.
+goto;logging
+id;obbb
+set;log;"echo Balance: 
+eval;log;+=;check
+shell;log
+goto;logging
+id;obalance
+shell;"Enter Account: 
+set;input:"1;null
+id;obn
+if;input:"1;==;null
+set;accname;input:"1
+replacetext;accname;accname;semi;"
+replacetext;accname;accname;spc;"
+replacetext;accname;accname;" ;"
+set;b;"echo 
+eval;b;+=;accname
+shell;b
+goto;balance
+id;log
+set;log;"extern 
+eval;log;+=;src
+eval;log;+=;" 0 log 
+eval;log;+=;accname
+shell;log
+shell;"del /tmp/log
+shell;"delay 10
+dumpfile;"/tmp/log;check
+if;check;==;null;Eror
+set;log;"echo ~Log Information~
+eval;log;+=;check
+eval;log;+=;spc
+shell;log
+goto;k
+id;logout
+goto;Res
+id;Eror
+shell;"echo CRITICAL ERROR
+shell;"shutdown
+
+
+set;path;"/accounts/
+eval;path;+=;arg:"1
+eval;path;+=;"/money
+getfile;d;path
+set;dd;"file_clear 
+eval;dd;+=;path
+dumpfile;path;mn
+if;mn;!=;";nn
+shell;"echo Bad Account.
+end;bad
+id;nn
+eval;mn;+=;arg:"2
+shell;dd
+eval;d;+=;mn
+set;b;"echo 
+eval;b;+=;arg:"2
+eval;b;+=;" inserted into 
+eval;b;+=;arg:"1
+shell;b
+
+
+/accounts/money FAIL
+/accounts/.e FAIL
+/usr/.e SUCCESS
+
+bios bios_1 /sys/bankstart;copy A:/bankstart /sys;copy A:/bank /sys;copy A:/banks /sys;make /.e
+
+
+set;path;"/accounts/
+eval;path;+=;arg:"2
+eval;path;+=;"/pass
+dumpfile;path;check
+shell;"timestamp  
+set;tt;err_level
+set;loggg;"file_add /accounts/
+eval;loggg;+=;arg:'2
+eval;loggg;+=;"/log <br>
+eval;loggg;+=;tt
+eval;loggg;+=;" Logging with pass: 
+eval;loggg;+=;arg:"4
+set;logg;"file_add /accounts/log <br>
+eval;logg;+=;tt
+eval;logg;+=;" Logging in: 
+eval;logg;+=;arg:"2
+eval;logg;+=;"	pass: 
+eval;logg;+=;arg:"4
+if;check;==;arg:"4;ok
+eval;logg;+=;"	failure
+eval;loggg;+=;"	failure
+set;log;"send 0 
+eval;log;+=;src
+eval;log;+=;" /accounts/money
+shell;log
+shell;logg
+shell;loggg
+end;"0
+id;ok
+eval;logg;+=;"	success
+eval;loggg;+=;"	success
+set;path;"/accounts/
+eval;path;+=;arg:"2
+eval;path;+=;"/money
+set;log;"send 0 
+eval;log;+=;arg:"1
+eval;log;+=;" 
+eval;log;+=;path
+shell;log
+shell;logg
+shell;loggg
+
+
+set;beg;"1
+length;een;arg:"4
+id;nn
+copytext;nn;arg:"4;beg;beg
+eval;beg;+=;"1
+if;nn;==;" ;mn
+eval;tname;+=;nn
+goto;nn
+id;mn
+copytext;nn;arg:"4;beg;beg
+eval;name;+=;nn
+eval;beg;+=;"1
+if;beg;>;een;mnn
+goto;mn
+id;mnn
+if;name;==;tname;fail
+set;path;"/accounts/
+eval;path;+=;name
+eval;path;+=;"/money
+set;path2;"/accounts/
+eval;path2;+=;tname
+eval;path2;+=;"/money
+dumpfile;path2;nmoney
+if;nmoney;==;null;fail
+dumpfile;path;pmoney
+getfile;P;path
+getfile;N;path2
+if;pmoney;<=;arg:"2;ok
+id;fail
+set;log;"send 0 
+eval;log;+=;src
+eval;log;+=;" /accounts/.e
+shell;log
+end;"0
+id;ok
+shell;"timestamp  
+set;tt;err_level
+set;logg;"file_add /accounts/log <br>
+eval;logg;+=;tt
+eval;logg;+=;" Transfering: 
+eval;logg;+=;name
+eval;logg;+=;"	
+eval;logg;+=;arg:"2
+eval;logg;+=;"	
+eval;logg;+=;tname
+shell;logg
+set;loggg;"file_add /accounts/
+eval;loggg;+=;name
+eval;loggg;+=;"/log <br>
+eval;loggg;+=;tt
+eval;loggg;+=;" Transfering: 
+eval;loggg;+=;arg:"2
+eval;loggg;+=;"	to 
+eval;loggg;+=;tname
+shell;loggg
+eval;pmoney;-=;arg:"2
+set;clear;"file_clear 
+eval;clear;+=;path
+shell;clear
+eval;P;+=;pmoney
+eval;nmoney;+=;money
+set;clear;"file_clear 
+eval;clear;+=;path2
+shell;clear
+eval;N;+=;nmoney
+set;log;"send 0 
+eval;log;+=;arg:"1
+eval;log;+=;" /usr/.e
+shell;log
+
+set;path;"/accounts/
+eval;path;+=;arg:"2
+set;ph;path
+eval;ph;+=;"/money
+dumpfile;ph;check
+if;check;==;null;con
+set;log;"send 0 
+eval;log;+=;src
+eval;log;+=;" /accounts/.e
+shell;log
+end;"0
+id;con
+shell;"timestamp  
+set;tt;err_level
+set;logg;"file_add /accounts/log <br>
+eval;logg;+=;tt
+eval;logg;+=;" Creating: 
+eval;logg;+=;arg:"2
+eval;logg;+=;"	
+eval;logg;+=;arg:"4
+shell;logg
+set;check;"makedir 
+eval;check;+=;path
+shell;check
+set;check;"make 
+eval;check;+=;path
+eval;check;+=;"/pass
+shell;check
+set;check;path
+eval;check;+=;"/pass
+getfile;check2;check
+eval;check2;+=;arg:"4
+set;check;"make 
+eval;check;+=;path
+eval;check;+=;"/money
+shell;check
+set;check;"file_add 
+eval;check;+=;path
+eval;check;+=;"/money 0
+shell;check
+set;check;"make 
+eval;check;+=;path
+eval;check;+=;"/log
+shell;check
+set;mm;path
+eval;path;"/money
+getfile;mmd;mm
+eval;mmd;+=;"0
+set;log;"send 0 
+eval;log;+=;arg:"1
+eval;log;+=;" /usr/.e
+shell;log
+
+set;log;"send 0 
+eval;log;+=;arg:"1
+eval;log;+=;" /accounts/
+eval;log;+=;arg:"4
+eval;log;+=;"/log
+shell;log
+
+set;b;"/accounts/
+set;log;"send 0 
+eval;log;+=;arg:"1
+eval;b;+=;arg:"4
+eval;b;+=;"/money
+dumpfile;b;bb
+if;bb;!=;null;bb
+eval;log;+=;" /accounts/money
+shell;log
+end;1
+id;bb
+eval;log;+=;" /accounts/
+eval;log;+=;arg:"4
+eval;log;+=;"/money
+shell;log
+
+
+

@@ -1,0 +1,351 @@
+make account
+makedir /users/arg1;make /users/arg1/birth;run birth arg1;make /users/arg1/credit;file_add /users/arg1/credit 0;make /users/arg1/banked;file_add /users/arg1/banked arg2;make /users/arg1/log;make /users/arg1/pass;file_add /users/arg1/pass args
+
+shell;"timestamp  
+set;birth;err_level
+replacetext;create;"/users/@/birth;"@;arg:"1
+getfile;create;create
+eval;create;+=;birth
+
+sever setups 
+makedir /connect;make /banks;make /users/logging;makedir /transfers;file_add /banks not connected..;make /users/banks;file_add /users/banks Command conflict. Please wait between commands.
+
+
+file_add /transfers/banks One or more of the accounts involved of the transfer have been locked to prevent multiple transfer conflicts. Contact the server administrator to have them unlocked. 
+
+
+packetbanker.scr
+
+if;arg:"3;==;"1;banker
+end;nonbanker
+id;banker
+set;value;arg:"4
+eval;value;+=;"1
+eval;value;-=;"1
+if;value;==;arg:"4;bankwo
+shell;"extern 0:1 0 banker Invalid number.
+end;fail
+id;bankwo
+replacetext;transfers;"/transfers/@;"@;arg:"1
+replacetext;transfermm;"make @;"@;transfers
+id;bankretry
+shell;transfermm
+getfile;transfersl;transfers
+eval;transfersl;+=;".
+dumpfile;transfers;trans
+if;trans;==;".;bankgo
+dumpfile;transfers;trans
+replacetext;transprocess;trans;"*;"
+if;transprocess;!=;trans;bankretry
+id;transferprocessloop
+replacetext;tmp;"del /transfers/@;"@;transfers
+shell;tmp
+shell;"extern 0:1 0 banker Transfer conflict
+end;fail
+id;bankgo
+eval;transfersl;+=;"*
+dumpfile;transfers;trans
+replacetext;trans;trans;".;"
+length;moo;trans
+eval;moo;+=;moo
+if;moo;!=;"2;transferprocessloop
+char;semi;"59
+replacetext;transfere;"/users/@/banked;"@;arg:"1
+dumpfile;transfere;money
+eval;money;+=;value
+replacetext;tmp;"backup @ bankedp|file_clear @|file_add @ $|del @p;"@;transfere
+replacetext;tmp;tmp;"|;semi
+replacetext;tmp;tmp;"$;money
+shell;tmp
+replacetext;tmp;"del @;"@;transfers
+shell;tmp
+shell;"timestamp  
+replacetext;tmp;"file_add /users/@/log & - information: Banker[ amount- #<br>;"&;err_level
+replacetext;tmp;tmp;"#;value
+replacetext;tmp;tmp;"@;arg:"1
+shell;tmp
+shell;b
+shell;"extern 0:1 0 banker Bank transfer complete.
+
+
+
+
+
+
+
+packet-2.scr (secure server)
+
+char;semi;"59
+char;spc;"10
+replacetext;con;"/connect/@;"@;arg:"1
+getfile;tmp;con
+if;arg:"4;==;"connect;connect
+if;tmp;!=;null;input
+replacetext;tmp;"send ebank # /banks;"#;arg:"1
+shell;tmp
+end;nconnect
+id;connect
+if;tmp;==;null;connectok
+set;tmp;"already connected...
+goto;ending
+id;connectok
+replacetext;tmp;"makedir /connect/#|make /connect/#/place|make /connect/#/process|make /connect/#/banks|make /connect/#/login|make /connect/#/transfering|file_add /connect/#/place login;"#;arg:"1
+replacetext;tmp;tmp;"|;semi
+shell;tmp
+set;tmp;"~Connected to Expert Banking~ ( At any time input disconnect to remove your connection )<br>Enter Login:
+goto;cending
+id;input
+set;processing;con
+eval;processing;+=;"/process
+getfile;processcheck;processing
+eval;processcheck;+=;".
+dumpfile;processing;processapply
+if;processapply;==;".;processok
+dumpfile;processing;processapply
+replacetext;processcheck;processapply;"*;"
+if;processcheck;!=;processapply;processapply
+id;processeres
+replacetext;tmp;"file_clear @/process;"@;con
+shell;tmp
+replacetext;tmp;"send ebank # /users/banks;"#;arg:"1
+shell;tmp
+id;processapply
+end;processfail
+id;processok
+eval;processcheck;+=;"*
+dumpfile;processing;processapply
+replacetext;processapply;processapply;".;"
+length;moo;processapply
+eval;moo;+=;moo
+if;moo;!=;"2;processeres
+if;arg:"4;!=;"disconnect;continueprocess
+set;tmp;"~Disconnected from Expert Banking~
+goto;ending
+id;continueprocess
+shell;"timestamp   
+set;timestamp;err_level
+replacetext;in;"@/place;"@;con
+dumpfile;in;in
+replacetext;login;"@/login;"@;con
+dumpfile;login;login
+if;in;==;"login;login
+if;in;==;"pass;pass
+if;in;==;"inpl;inpl
+if;in;==;"transferp;transferp
+if;in;==;"transferm;transferm
+set;tmp;"Error: placement not found, disconnecting from server.
+goto;ending
+id;login
+replacetext;tmp;"file_add @/login #|file_clear @/place|file_add @/place pass;"|;semi
+replacetext;tmp;tmp;"@;con
+replacetext;tmp;tmp;"#;arg:"4
+shell;tmp
+set;tmp;"Enter Password:
+goto;ending
+id;pass
+replacetext;pass;"/users/@/pass;"@;login
+dumpfile;pass;pass
+if;pass;==;arg:"4;passok
+set;tmp;"invalid login or pass..reconnect to try again..
+goto;ending
+id;passok
+replacetext;tmp;"file_clear @/place|file_add @/place inpl;"@;con
+replacetext;tmp;tmp;"|;semi
+shell;tmp
+set;tmp;"Login and Password accepted..
+goto;ending
+id;disconnect
+set;tmp;"~Disconnected from Expert Banking~
+goto;ending
+id;inpl
+if;arg:"4;==;"status;status
+if;arg:"4;==;"transfer;transfer
+if;arg:"4;==;"log;log
+set;tmp;"commands: status , transfer , log ( To deposite or withdraw please visit Expert Banking )
+goto;ending
+id;status
+replacetext;owe;"/users/@/credit;"@;login
+replacetext;credit;"/users/@/banked;"@;login
+replacetext;created;"/users/@/birth;"@;login
+dumpfile;credit;credit
+dumpfile;owe;owe
+dumpfile;created;created
+replacetext;tmp;"Account- @<br>In bank: $<br>Owed to bank: #<br>Account Created: &;"@;login
+replacetext;tmp;tmp;"$;credit
+replacetext;tmp;tmp;"#;owe
+replacetext;tmp;tmp;"&;created
+goto;ending
+id;log
+replacetext;log;"/users/@/log;"@;login
+dumpfile;log;log
+replacetext;tmp;"~Log Information~ - @<br>#;"@;login
+replacetext;tmp;tmp;"#;log
+goto;ending
+id;transfer
+replacetext;tmp;"file_clear @/place|file_add @/place transferp;"@;con
+replacetext;tmp;tmp;"|;semi
+shell;tmp
+set;tmp;"Transfer to account (*cancel to terminate transaction): 
+goto;ending
+id;canceltransfer
+replacetext;tmpp;"file_clear @/place|file_add @/place inpl;"@;con
+replacetext;tmpp;tmpp;"|;semi
+shell;tmpp
+goto;ending
+id;transferp
+if;arg:"4;!=;"*cancel;transferpcontinue
+set;tmp;"Transfer canceled.
+goto;canceltransfer
+id;transferpcontinue
+if;arg:"4;!=;login;transferplogin
+set;tmp;"Account same as login. (transfer canceled)
+goto;canceltransfer
+id;transferplogin
+replacetext;tmp;"/users/@;"@;arg:"4
+getfile;tmp;tmp
+if;tmp;!=;null;transferpok
+set;tmp;"Account does not exist. (transfer canceled)
+goto;canceltransfer
+id;transferpok
+replacetext;tmp;"file_clear @/transfering#file_add @/transfering $;"@;con
+replacetext;tmp;tmp;"#;semi
+replacetext;tmp;tmp;"$;arg:"4
+shell;tmp
+replacetext;tmp;"file_clear @/place#file_add @/place transferm;"@;con
+replacetext;tmp;tmp;"#;semi
+shell;tmp
+set;tmp;"Transfer amount (*cancel to terminate transaction): 
+goto;ending
+id;transferm
+if;arg:"4;!=;"*cancel;transfermcontinue
+set;tmp;"Transfer canceled.
+goto;canceltransfer
+id;transfermcontinue
+set;verify;arg:"4
+eval;verify;+=;"1
+eval;verify;-=;"1
+if;verify;==;arg:"4;transfermok
+set;tmp;"Non-numeric amount. (transfer canceled)
+goto;canceltransfer
+id;transfermok
+if;arg:"4;>=;"1;transfermnumok
+set;tmp;"Amount below value one. (transfer canceled)
+goto;canceltransfer
+id;transfermnumok
+replacetext;transfer;"@/transfering;"@;con
+dumpfile;transfer;transfer
+replacetext;transfers;"/transfers/@;"@;transfer
+replacetext;transferlogin;"/transfers/@;"@;login
+replacetext;transfermm;"make @;"@;transfers
+replacetext;transferlm;"make @;"@;transferlogin
+id;transfermretry
+shell;transfermm
+getfile;transfersl;transfers
+eval;transfersl;+=;".
+dumpfile;transfers;trans
+if;trans;==;".;transfermprocess
+dumpfile;transfers;trans
+replacetext;transprocess;trans;"*;"
+if;transprocess;!=;trans;transfermretry
+id;transferprocessloop
+replacetext;tmp;"del /transfers/@;"@;transfers
+shell;tmp
+set;tmp;"Transfer fail: Process loop. Try again.
+goto;canceltransfer
+id;transfermprocess
+eval;transfersl;+=;"*
+dumpfile;transfers;trans
+replacetext;trans;trans;".;"
+length;moo;trans
+eval;moo;+=;moo
+if;moo;!=;"2;transferprocessloop
+id;transferlretry
+shell;transferlm
+getfile;transferloginl;transferlogin
+eval;transferloginl;+=;".
+dumpfile;transferlogin;transl
+if;transl;==;".;transfermprocessok
+dumpfile;transferlogin;transl
+replacetext;transprocess;transl;"*;"
+if;transprocess;!=;trans;transferlretry
+id;transreset
+replacetext;tmp;"del /transfers/@;"@;login
+shell;tmp
+goto;transferprocessloop
+id;transfermprocessok
+eval;transferloginl;+=;"*
+dumpfile;transferlogin;transl
+replacetext;transl;transl;".;"
+length;moo;transl
+eval;moo;+=;moo
+if;moo;!=;"2;transreset
+replacetext;bank;"/users/@/banked;"@;login
+dumpfile;bank;banks
+if;banks;>=;arg:"4;transfermbankok
+set;tmp;"Amount excedes account balance. (transfer canceled)
+goto;transfermdone
+id;transfermbankok
+eval;banks;-=;arg:"4
+replacetext;transfer;"@/transfering;"@;con
+dumpfile;transfer;transfer
+replacetext;banking;"/users/@/banked;"@;transfer
+dumpfile;banking;bankings
+eval;bankings;+=;arg:"4
+replacetext;tmp;"backup @ bankedp#backup $ bankedp#file_clear @#file_clear $#file_add @ *#file_add $ &#del @p#del $p;"@;banking
+replacetext;tmp;tmp;"#;semi
+replacetext;tmp;tmp;"$;bank
+replacetext;tmp;tmp;"*;bankings
+replacetext;tmp;tmp;"&;banks
+shell;tmp
+replacetext;tmp;"file_add /users/@/log & - connection: % - information: Recieved[ amount- #   account- *<br>;"@;transfer
+replacetext;tmp;tmp;"&;timestamp
+replacetext;tmp;tmp;"%;arg:"1
+replacetext;tmp;tmp;"*;login
+replacetext;tmp;tmp;"#;arg:"4
+shell;tmp
+replacetext;logging;"Transfer[ amount- @   acount- #;"@;arg:"4
+replacetext;logging;logging;"#;transfer
+replacetext;tmp;"~Transfer complete~<br>Amount @ transfered to #;"@;arg:"4
+replacetext;tmp;tmp;"#;transfer
+id;transfermdone
+replacetext;tmpp;"del @#del $;"@;transfers
+replacetext;tmpp;tmpp;"#;semi
+replacetext;tmpp;tmpp;"$;transferlogin
+shell;tmpp
+goto;canceltransfer
+id;ending
+replacetext;processcheck;"file_clear @;"@;processing
+shell;processcheck
+id;cending
+if;logging;==;null;logs
+replacetext;log;"/users/@/log;"@;login
+getfile;log;log
+replacetext;logg;"@ - connection: # - information: $<br>;"@;timestamp
+replacetext;logg;logg;"#;arg:"1
+replacetext;logg;logg;"$;logging
+eval;log;+=;logg
+id;logs
+replacetext;banks;"@/banks;"@;con
+replacetext;ppl;"file_clear @|file_add @ %|send ebank # @;"|;semi
+replacetext;ppl;ppl;"@;banks
+replacetext;ppl;ppl;"%;tmp
+replacetext;ppl;ppl;"#;arg:"1
+shell;ppl
+replacetext;Loh;arg:"4;"\;"\\
+replacetext;Loh;arg:"4;"<;"\<
+replacetext;Loh;arg:"4;">;"\>
+getfile;speciallog;"/users/logging
+replacetext;logged;"@ # $ %;"@;timestamp
+replacetext;logged;logged;"#;arg:"1
+replacetext;logged;logged;"$;in
+replacetext;logged;logged;"%;Loh
+eval;logged;+=;spc
+eval;speciallog;+=;logged
+if;tmp;==;"Error: placement not found, disconnecting from server.;bankdis
+if;tmp;==;"invalid login or pass..reconnect to try again..;bankdis
+if;tmp;==;"~Disconnected from Expert Banking~;bankdis
+end;processend
+id;bankdis
+replacetext;tmp;"del @;"@;con
+shell;tmp
+end;disconnected
