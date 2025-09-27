@@ -28,7 +28,6 @@ eval;bb;%;"128
 set;abc;enc
 eval;enc;^;bb
 char;FA;enc
-length;fal;FA
 set;STRINGSS;"[FA][STRINGSS]
 if;seedloop;>;"1;FaF
 copytext;FA;STRING;"1;"1
@@ -51,7 +50,6 @@ eval;bb;+=;aa
 eval;bb;%;"128
 eval;enc;^;bb
 char;FA;enc
-length;fal;FA
 set;STRING;"[FA][STRINGSS]
 replacetext;ss;"file_clear @;"@;arg:"1
 shell;ss
