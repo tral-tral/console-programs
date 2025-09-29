@@ -1,0 +1,284 @@
+make account
+makedir /users/arg1;make /users/arg1/pass;file_add /users/arg1/pass args      Password here uses args at end so args before as one word can be used and password at end use all of rest so password can be fragmented. Add on any record files need on an account - example bank uses 'banked', amount money stored on account
+
+
+The server will need a name for the file that it sends for replies, for this template I will use the name 'servers'.
+
+sever setups 
+makedir /connect;make /connect/servers;make /connect/logging;file_add /connect/servers not connected..;makedir /users/;make /users/servers;file_add /users/servers You're connection to the server has been locked to protect against process conflict. To prevent this from happening, do not attempt to send a command to the server til a reply has been recieved. Contact the server administrator to clear your connection.
+
+Creates directory that used for storing connections. Reply file servers stored inside of connect to send out reply to attempted input from non connected sources. Reply file in users used to send out locked message for locked connections that can't use their message since their connections won't be ending.
+
+
+
+packet-2.scr (secure server)  -2 is used as the ID so source ID's can't be spoofed to hijack connections.
+
+char;semi;"59
+char;spc;"10
+set;con;"/connect/
+eval;con;+=;arg:"1
+getfile;tmp;con
+if;arg:"4;==;"connect;connect
+if;tmp;!=;null;input
+set;tmp;"send 
+eval;tmp;+=;"newserver 
+eval;tmp;+=;arg:"1
+eval;tmp;+=;" /connect/servers
+shell;tmp
+end;nconnect
+id;connect
+if;tmp;==;null;connectok
+set;tmp;"already connected...
+goto;ending
+id;connectok
+set;tmp;"makedir /connect/
+eval;tmp;+=;arg:"1
+shell;tmp
+set;conl;"make /connect/
+eval;conl;+=;arg:"1
+set;tmp;conl
+eval;tmp;+=;"/place
+shell;tmp
+set;tmp;conl
+eval;tmp;+=;"/process
+shell;tmp
+set;tmp;conl
+eval;tmp;+=;"/servers
+shell;tmp
+set;tmp;conl
+eval;tmp;+=;"/login
+shell;tmp
+set;tmp;conl
+eval;tmp;+=;"/storedin
+shell;tmp
+set;tmp;"file_add /connect/
+eval;tmp;+=;arg:"1
+eval;tmp;+=;"/place login
+shell;tmp
+set;tmp;"~Connected to New Server~ ( At any time input disconnect to remove your connection )\nEnter Login:
+goto;cending
+id;input
+set;processing;con
+eval;processing;+=;"/process
+getfile;processcheck;processing
+eval;processcheck;+=;".
+dumpfile;processing;processapply
+if;processapply;==;".;processok
+dumpfile;processing;processapply
+replacetext;processcheck;processapply;"*;"
+if;processcheck;!=;processapply;processapply
+set;tmp;"send 
+eval;tmp;+=;"newserver 
+eval;tmp;+=;arg:"1
+eval;tmp;+=;" /users/servers
+shell;tmp
+id;processapply
+end;processfail
+id;processok
+eval;processcheck;+=;"*
+dumpfile;processing;processbypass
+replacetext;processbypass;processbypass;".;"
+length;processbypass;processbypass
+eval;processbypass;+=;processbypass
+if;processbypass;==;"2;processbypass
+end;processbypass
+id;processbypass
+if;arg:"4;!=;"disconnect;continueprocess
+set;tmp;"~Disconnected from New Server~
+goto;ending
+id;continueprocess
+shell;"timestamp   
+set;timestamp;err_level
+set;in;con
+eval;in;+=;"/place
+dumpfile;in;in
+set;login;con
+eval;login;+=;"/login
+dumpfile;login;login
+if;in;==;"login;login
+if;in;==;"pass;pass
+if;in;==;"inpl;inpl
+if;in;==;"special1;special1
+if;in;==;"special2;special2
+set;tmp;"Error: placement not found, disconnecting from server.
+goto;ending
+id;login
+set;tmp;"file_add 
+eval;tmp;+=;con
+eval;tmp;+=;"/login 
+eval;tmp;+=;arg:"4
+shell;tmp
+set;tmp;"file_clear 
+eval;tmp;+=;con
+eval;tmp;+=;"/place
+shell;tmp
+set;tmp;"file_add 
+eval;tmp;+=;con
+eval;tmp;+=;"/place pass
+shell;tmp
+set;tmp;"Enter Password:
+goto;ending
+id;pass
+set;pass;"/users/
+eval;pass;+=;login
+eval;pass;+=;"/pass
+dumpfile;pass;pass
+if;pass;==;arg:"4;passok
+set;tmp;"invalid login or pass..reconnect to try again..
+goto;ending
+id;passok
+set;tmp;"file_clear 
+eval;tmp;+=;con
+eval;tmp;+=;"/place
+shell;tmp
+set;tmp;"file_add 
+eval;tmp;+=;con
+eval;tmp;+=;"/place inpl
+shell;tmp
+set;tmp;"Login and Password accepted..
+goto;ending
+id;disconnect
+set;tmp;"~Disconnected from New Server~
+goto;ending
+id;inpl
+if;arg:"4;==;"command1;cmd1
+if;arg:"4;==;"command2;cmd2
+if;arg:"4;==;"command3;cmd3
+set;tmp;"commands: status , transfer , log ( To deposite or withdraw please visit Expert Banking )
+goto;ending
+id;cmd1
+set;logging;"CMD1 Accessed.
+set;tmp;"Command one was used.
+goto;ending
+id;cmd2
+set;logging;"CMD2 Accessed.
+set;tmp;"Command two was used.
+goto;ending
+id;cmd3
+set;tmp;"file_clear 
+eval;tmp;+=;con
+eval;tmp;+=;"/place
+shell;tmp
+set;tmp;"file_add 
+eval;tmp;+=;con
+eval;tmp;+=;"/place special1
+shell;tmp
+set;logging;"CMD3 Accessed.
+set;tmp;"COmmand three used, using special1 place for new input. Enter Your First Name.
+goto;ending
+id;special1
+set;tmp;"file_clear 
+set;too;con
+eval;too;+=;"/storedin
+eval;tmp;+=;too
+eval;tmp;+=;semi
+eval;tmp;+=;"file_add 
+eval;tmp;+=;too
+eval;tmp;+=;" 
+eval;tmp;+=;arg:"4
+shell;tmp
+set;tmp;"file_clear 
+eval;tmp;+=;con
+eval;tmp;+=;"/place
+shell;tmp
+set;tmp;"file_add 
+eval;tmp;+=;con
+eval;tmp;+=;"/place special2
+shell;tmp
+set;logging;"Accepted First name, 
+eval;logging;+=;arg:"4
+set;tmp;"Used special input, saving input to var for later use in special2.  Enter Your Last name.
+goto;ending
+id;special2
+set;tmp;"file_clear 
+eval;tmp;+=;con
+eval;tmp;+=;"/place
+shell;tmp
+set;tmp;"file_add 
+eval;tmp;+=;con
+eval;tmp;+=;"/place inpl
+shell;tmp
+set;savedinput;con
+eval;savedinput;+=;"/storedin
+dumpfile;savedinput;savedinput
+set;logging;"Accepted Last name, 
+eval;logging;+=;arg:"4
+set;tmp;"I have used the stored input to form.	 
+eval;tmp;+=;arg:"4
+eval;tmp;+=;", 
+eval;tmp;+=;savedinput
+eval;tmp;+=;"	- Use saved input for stepped input of information. Need for many things. - exmaple, the login system.
+id;ending
+set;processcheck;"file_clear 
+eval;processcheck;+=;processing
+shell;processcheck
+id;cending
+if;logging;==;null;logs
+set;log;"/users/
+eval;log;+=;login
+eval;log;+=;"/log
+getfile;log;log
+set;logg;timestamp
+eval;logg;+=;" - connection: 
+eval;logg;+=;arg:"1
+eval;logg;+=;" - information: 
+eval;logg;+=;logging
+eval;logg;+=;spc
+eval;log;+=;logg
+id;logs
+set;reply;con
+eval;reply;+=;"/servers
+set;ppl;"file_clear 
+eval;ppl;+=;reply
+eval;ppl;+=;semi
+eval;ppl;+=;"file_add 
+eval;ppl;+=;reply
+eval;ppl;+=;" 
+eval;ppl;+=;tmp
+eval;ppl;+=;semi
+eval;ppl;+=;"send 
+eval;ppl;+=;"newserver 
+eval;ppl;+=;arg:"1
+eval;ppl;+=;" 
+eval;ppl;+=;reply
+shell;ppl
+set;speciallog;"/connect/logging
+getfile;speciallog;speciallog
+set;logged;timestamp
+eval;logged;+=;" 
+eval;logged;+=;arg:"1
+eval;logged;+=;" 
+eval;logged;+=;in
+eval;logged;+=;" 
+eval;logged;+=;arg:"4
+eval;logged;+=;spc
+eval;speciallog;+=;logged
+if;tmp;==;"Error: placement not found, disconnecting from server.;serverdis
+if;tmp;==;"invalid login or pass..reconnect to try again..;serverdis
+if;tmp;==;"~Disconnected from New Server~;severdis
+end;processend
+id;serverdis
+set;tmp;"del 
+eval;tmp;+=;con
+shell;tmp
+end;disconnected
+
+
+
+
+
+
+Server detail information,
+
+I'm sure you have noticed, but you use the tmp var to set your reply and goto ending. The ending sequence clears the process, adds to logs, and sends out the reply of the set tmp.  
+To control what is added to account log after command is process, set the loggging var in the code for a command.
+Below that is the disconnect check, if tmp is equal to one of those, delete the connection.
+Near the top of the code is a complex process check used to protect the server against conflicting commands, I do not recommend changing this at all.
+Though sometimes you'll need to create another directory for processing called a process directory.  The bank server uses one for transfers being made.
+You the same code but alter it to use a file from inside the directory, the name of the file the account in use. The great thing about process directories though is they are made to use a 'queue' system instead of going to an end like input does.
+
+The con var is used to grab a connections path, its equal to /connection/[source] great to set to and eval to to grab stored vars.
+
+
+To add more commands, use the inpl ID and follow the commands already in place as a guide.
+Special inputs are checked after process is valid.  Login, password, and inpl are special inputs.  INPL is where commands are to be used after login.
