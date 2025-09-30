@@ -26,6 +26,7 @@ eval;aa;*=;"16
 eval;bb;+=;aa
 eval;bb;%;"128
 eval;enc;^;bb
+eval;enc;+=;"128
 char;FA;enc
 set;STRINGSS;"[FA][STRINGSS]
 if;seedloop;>;"1;FaF
@@ -48,6 +49,7 @@ eval;aa;*=;"16
 eval;bb;+=;aa
 eval;bb;%;"128
 eval;enc;^;bb
+eval;enc;+=;"128
 char;FA;enc
 set;STRING;"[FA][STRINGSS]
 replacetext;ss;"file_clear @;"@;arg:"1
@@ -56,9 +58,9 @@ getfile;may;arg:"1
 eval;may;+=;STRING
 end;hhhhhhh
 id;RERERE
-set;seedloop;"1
-copytext;starts;STRING;"2;slength
-copytext;FA;STRING;"1;"1
+copytext;starts;STRING;"3;slength
+eval;slength;-=;"1
+copytext;FA;STRING;"1;"2
 ascii;enc;FA
 md5;"[starts][seedr];blocksmon
 copytext;a1;blocksmon;"1;"1
@@ -76,9 +78,10 @@ id;numb32
 eval;aa;*=;"16
 eval;bb;+=;aa
 eval;bb;%;"128
+eval;enc;-=;"128
 eval;enc;^;bb
 char;STRINGSS;enc
-set;seedloop;"2
+set;seedloop;"3
 id;FaF2
 md5;"[STRINGSS][seedr];blocksmon
 copytext;a1;blocksmon;"1;"1
@@ -96,12 +99,15 @@ id;numb22
 eval;aa;*=;"16
 eval;bb;+=;aa
 eval;bb;%;"128
-copytext;FA;STRING;seedloop;seedloop
+set;seedloopcopy;seedloop
+eval;seedloopcopy;+=;"1
+copytext;FA;STRING;seedloop;seedloopcopy
 ascii;enc;FA
+eval;enc;-=;"128
 eval;enc;^;bb
 char;FA;enc
 set;STRINGSS;"[STRINGSS][FA]
-eval;seedloop;+=;"1
+eval;seedloop;+=;"2
 if;seedloop;<=;slength;FaF2
 replacetext;ss;"file_clear @;"@;arg:"1
 shell;ss
