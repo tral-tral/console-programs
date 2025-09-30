@@ -9,7 +9,7 @@ Run the scripts and make the commands using the code from setup.txt
 On a client machine, run the script from client.txt and use the commands listed.
 
 ## baconbits encryption
-Encrypt a text file with a password. Can also copy the code into existing programs to intergrate encryption.
+Encrypt a text file with a password. Can also copy the code into existing programs to intergrate encryption. It is not compatible with texts that contain special characters - ascii values greater than 127.
 To use the program as is,
 - arg 1: file name
 - arg 2: password
